@@ -534,7 +534,7 @@ console.log(prefixer.add(["transition", "user-select"]));
 
 ### 26-35
 
-전역 함수라면 this는 전역 객체 가리침. 상위 스코프가 전역이기 때문.
+전역 함수라면 this는 전역 객체 가리킴. 상위 스코프가 전역이기 때문.
 
 ```javascript
 // 전역 함수 foo의 상위 스코프는 전역이므로 화살표 함수 foo의 this는 전역 객체를 가리킨다.
