@@ -1,9 +1,16 @@
+- [15장 let, const 키워드와 블록 레벨 스코프](#15장-let-const-키워드와-블록-레벨-스코프)
+
 # 15장 let, const 키워드와 블록 레벨 스코프
----
 
-## 15.1 var 키워드로 선언한 변수의 문제점
+# 15.1 var 키워드로 선언한 변수의 문제점
 
-#### 예제 15-01
+- 변수 중복 선언 허용, 함수 레벨 스코프, 변수 호이스팅
+
+## 15.1.1 변수 중복 선언 허용
+
+\*초기화문: 변수 선언과 동시에 _초기값을 할당하는 문_
+
+### 15-01
 
 ```javascript
 var x = 1;
@@ -19,7 +26,13 @@ console.log(x); // 100
 console.log(y); // 1
 ```
 
-#### 예제 15-02
+## 15.1.2 함수 레벨 스코프
+
+- 인정되는 지역 스코프: 함수 코드의 블록만
+- 인정되지 않은 블록 스코프: 조건문(if문), 반목문(for, while문), try/catch문 등
+- 전역변수 남발로 인한 중복 선언 발생 문제점
+
+### 15-02
 
 ```javascript
 var x = 1;
@@ -33,7 +46,7 @@ if (true) {
 console.log(x); // 10
 ```
 
-#### 예제 15-03
+### 15-03
 
 ```javascript
 var i = 10;
@@ -47,7 +60,18 @@ for (var i = 0; i < 5; i++) {
 console.log(i); // 5
 ```
 
-#### 예제 15-04
+## 15.1.3 변수 호이스팅
+
+- 변수 선언(선언 및 초기화 단계): 런타임 이전 단계에서 먼저 실행.
+- 변수 호이스팅: 변수 선언문이 코드의 선두로 끌려 올려진 것처럼 동작하는 자바스크립트 고유의 특징
+
+  ```js
+  console.log(score); // undefined
+
+  var score; // 변수 선언문
+  ```
+
+### 15-04
 
 ```javascript
 // 이 시점에는 변수 호이스팅에 의해 이미 foo 변수가 선언되었다(1. 선언 단계)
@@ -63,14 +87,7 @@ console.log(foo); // 123
 var foo;
 ```
 
-## 15.2 let 키워드
-var 키워드의 단점을 보완하기 위해 let과 const 를 사용한다.
-<br/>
-
-
-#### 예제 15-05
-
-- ##### 변수 중복 선언 금지
+# 15-05
 
 ```javascript
 var foo = 123;
@@ -83,10 +100,7 @@ let bar = 123;
 let bar = 456; // SyntaxError: Identifier 'bar' has already been declared
 ```
 
-같은 스코프 내 이름이 같은 변수를 중복선언시, 문법 에러 발생
-
-#### 예제 15-06
-- ##### 모든 코드 블록 ( 함수, if문, for문, while문, try/catch문 등 ) 을 지역스코프로 인정하는 블록 레벨 스코프를 따른다.
+# 15-06
 
 ```javascript
 let foo = 1; // 전역 변수
@@ -100,31 +114,14 @@ console.log(foo); // 1
 console.log(bar); // ReferenceError: bar is not defined
 ```
 
-- 전역스코프 : 블록`{}` 바깥이나 함수 바깥에 선언 된 변수
-전역 스코프에 변수를 선언하면 어떤 위치의 코드에서든 사용할 수 있는 전역변수가 됨
-- 지역스코프 : 특정 부분에서만 사용할 수 있는 변수
-  - 함수스코프 : `함수` 내에서 선언된 변수, 함수 내부에서만 접근 가능
-  - 블록스코프 : 블록`{}` 내에서 선언된 변수, 블록 내부에서만 접근 가능
-
-#### 예제 15-07
-- ##### 변수 호이스팅이 발생하지 않는 것처럼 동작
-
-변수의 생성과정
-1. 선언 단계
-2. 초기화 단계
-3. 할당 단계
-
-호이스팅 : 스코프 내부 어디서든 변수 선언은 최상위에 선언된 것처럼 행동
-
-var 로 선언한 모든 변수는 선언은 호이스팅 되지만, 할당은 호이스팅 되지 않음 ( 변수의 존재는 알지만, 값은 모르는 상태 )
+# 15-07
 
 ```javascript
 console.log(foo); // ReferenceError: foo is not defined
 let foo;
 ```
 
-
-#### 예제 15-08
+# 15-08
 
 ```javascript
 // var 키워드로 선언한 변수는 런타임 이전에 선언 단계와 초기화 단계가 실행된다.
@@ -138,13 +135,7 @@ foo = 1; // 할당문에서 할당 단계가 실행된다.
 console.log(foo); // 1
 ```
 
-let 키워드로 선언한 변수는 "선언 단계"와 "초기화 단계"가 분리되어 진행
-
-let 과 const 도 호이스팅이 되지만, TDZ 때문에 에러가 남
-
--> 할당하기 전의 변수들은 TDZ ( 일시적 사각지대 ) 안에 보관되는데, 할당하기 전에는 사용할 수 없음
-
-#### 예제 15-09
+# 15-09
 
 ```javascript
 // 런타임 이전에 선언 단계가 실행된다. 아직 변수가 초기화되지 않았다.
@@ -158,9 +149,7 @@ foo = 1; // 할당문에서 할당 단계가 실행된다.
 console.log(foo); // 1
 ```
 
-
-#### 예제 15-10
-let 도 호이스팅이 발생한다는 증거
+# 15-10
 
 ```javascript
 let foo = 1; // 전역 변수
@@ -170,11 +159,8 @@ let foo = 1; // 전역 변수
   let foo = 2; // 지역 변수
 }
 ```
-호이스팅이 발생하지 않는다면 전역 변수 foo 값을 출력해야 하지만, 호이스팅이 발생하기 때문에 참조 에러가 발생
 
-#### 예제 15-11
-
-##### 전역 객체 window 의 프로퍼티가 아니다.
+# 15-11
 
 ```javascript
 // 이 예제는 브라우저 환경에서 실행해야 한다.
@@ -201,8 +187,7 @@ console.log(window.foo); // ƒ foo() {}
 console.log(foo); // ƒ foo() {}
 ```
 
-
-#### 예제 15-12
+# 15-12
 
 ```javascript
 // 이 예제는 브라우저 환경에서 실행해야 한다.
@@ -213,27 +198,19 @@ console.log(window.x); // undefined
 console.log(x); // 1
 ```
 
-`window.foo` 와 같이 접근 불가
-
-## 15.3 const 키워드
-상수 선언
-
-let 키워드와 다른 점
-
-#### 예제 15-13
+# 15-13
 
 ```javascript
 const foo = 1;
 ```
-- 선언과 동시에 초기화 해야한다.
 
-#### 예제 15-14
+# 15-14
 
 ```javascript
 const foo; // SyntaxError: Missing initializer in const declaration
 ```
 
-#### 예제 15-15
+# 15-15
 
 ```javascript
 {
@@ -247,16 +224,14 @@ const foo; // SyntaxError: Missing initializer in const declaration
 console.log(foo); // ReferenceError: foo is not defined
 ```
 
-#### 예제 15-16
-- 재할당 금지
+# 15-16
 
 ```javascript
 const foo = 1;
 foo = 2; // TypeError: Assignment to constant variable.
 ```
 
-#### 예제 15-17
-- 상수 : 재할당이 금지 된 변수
+# 15-17
 
 ```javascript
 // 세전 가격
@@ -264,13 +239,12 @@ let preTaxPrice = 100;
 
 // 세후 가격
 // 0.1의 의미를 명확히 알기 어렵기 때문에 가독성이 좋지 않다.
-let afterTaxPrice = preTaxPrice + (preTaxPrice * 0.1);
+let afterTaxPrice = preTaxPrice + preTaxPrice * 0.1;
 
 console.log(afterTaxPrice); // 110
 ```
 
-
-#### 예제 15-18
+# 15-18
 
 ```javascript
 // 세율을 의미하는 0.1은 변경할 수 없는 상수로서 사용될 값이다.
@@ -281,36 +255,20 @@ const TAX_RATE = 0.1;
 let preTaxPrice = 100;
 
 // 세후 가격
-let afterTaxPrice = preTaxPrice + (preTaxPrice * TAX_RATE);
+let afterTaxPrice = preTaxPrice + preTaxPrice * TAX_RATE;
 
 console.log(afterTaxPrice); // 110
 ```
 
-#### 예제 15-19
-
-- const 키워드로 선언된 변수에 객체를 할당한 경우 값 변경 가능
+# 15-19
 
 ```javascript
 const person = {
-  name: 'Lee'
+  name: "Lee",
 };
 
 // 객체는 변경 가능한 값이다. 따라서 재할당없이 변경이 가능하다.
-person.name = 'Kim';
+person.name = "Kim";
 
 console.log(person); // {name: "Kim"}
 ```
-
-const 키워드는 재할당을 금지할 뿐 "불변"을 의미하지 않음
-
-- - -
-
-## var, let, const 차이
-
-||var|let|const|
-|---|---|---|---|
-|변수중복선언|O|X|X|
-|재할당|O|필요한 경우 사용|X|
-|전역 객체 window의<br/>프로퍼티|O|X|X|
-|스코프|함수 레벨 스코프|블록 레벨 스코프|블록 레벨 스코프|
-|변수의<br/>생성과정|1. 선언, 초기화 단계<br/>2. 할당 단계|1. 선언 단계<br/>2. 초기화 단계<br/>3. 할당 단계|1. 선언, 초기화, 할당 단계|
