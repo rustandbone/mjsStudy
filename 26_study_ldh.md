@@ -1,8 +1,10 @@
 - [26장 ES6 함수의 추가 기능](#26장-es6-함수의-추가-기능)
+- [26.1 함수의 구분](#261-함수의-구분)
     - [26-01](#26-01)
     - [26-02](#26-02)
     - [26-03](#26-03)
     - [26-04](#26-04)
+- [26.2 메서드](#262-메서드)
     - [26-05](#26-05)
     - [26-06](#26-06)
     - [26-07](#26-07)
@@ -60,9 +62,11 @@
     - [26-51](#26-51)
     - [26-52](#26-52)
     - [26-53](#26-53)
+  - [26.4.2 Rest 파라미터와 arguments 객체](#2642-rest-파라미터와-arguments-객체)
     - [26-54](#26-54)
     - [26-55](#26-55)
     - [26-56](#26-56)
+- [26.5 매개변수 기본값](#265-매개변수-기본값)
     - [26-57](#26-57)
     - [26-58](#26-58)
     - [26-59](#26-59)
@@ -71,6 +75,13 @@
     - [26-62](#26-62)
 
 # 26장 ES6 함수의 추가 기능
+
+# 26.1 함수의 구분
+
+- ES6 이전의 함수
+  - 일반적인 함수
+  - 인스턴스를 생성할 수 있는 생성자 함수
+  - 메서드(객체 바인딩)
 
 ### 26-01
 
@@ -100,6 +111,9 @@ foo(); // -> undefined
 new foo(); // -> foo {}
 ```
 
+=> 모든 함수가 callable(호출할 수 있는 함수 객체)이면서 constructor(인스턴스를 생성할 수 있는 함수 객체)임.  
+메서드(객체에 바인딩된 함수)도 callable이며 constructor인 것.
+
 ### 26-03
 
 ```javascript
@@ -122,7 +136,12 @@ console.log(bar()); // undefined
 console.log(new obj.f()); // f {}
 ```
 
+메서드가 constructor라는 것은 prototype 프로퍼티를 가지며, 프로토타입 객체도 생성한다는 뜻 => `성능 문제`
+
 ### 26-04
+
+함수에 전달되어 보조 함수의 역할을 하는 콜백 함수도 constructor이기 때문에 `불필요한` 프로토타입 객체를 생성.  
+생성자 함수로 호출되지 않아도 프로토타입을 생성하는 것.
 
 ```javascript
 // 콜백 함수를 사용하는 고차 함수 map. 콜백 함수도 constructor이며 프로토타입을 생성한다.
@@ -130,6 +149,15 @@ console.log(new obj.f()); // f {}
   return item * 2;
 }); // -> [ 2, 4, 6 ]
 ```
+
+- ES6에서 구분한 함수
+  - 일반 함수 : constructor, prototype, arguments
+  - 메서드 : super, arguments - non-constuctor
+  - 화살표 함수 - non-constructor
+
+# 26.2 메서드
+
+ES6 사양에서 정의된 메서드 : 메서드 축약 표현으로 정의된 함수
 
 ### 26-05
 
@@ -150,6 +178,8 @@ console.log(obj.foo()); // 1
 console.log(obj.bar()); // 1
 ```
 
+non-constructor => 생성자 함수로 호출할 수 없음 => 인스턴스 생성 못하므로 prototype 프로퍼티가 없고, 프로토타입도 생성하지 않음
+
 ### 26-06
 
 ```javascript
@@ -169,6 +199,8 @@ obj.bar.hasOwnProperty("prototype"); // -> true
 
 ### 26-08
 
+표준 빌트인 객체가 제공하는 프로토타입 메서드, 정적 메서드 모두 non-constructor.
+
 ```javascript
 String.prototype.toUpperCase.prototype; // -> undefined
 String.fromCharCode.prototype; // -> undefined
@@ -179,6 +211,8 @@ Number.isFinite.prototype; // -> undefined
 Array.prototype.map.prototype; // -> undefined
 Array.from.prototype; // -> undefined
 ```
+
+ES6 메서드는 자신을 바인딩한 객체를 가리키는 내부 슬롯 [[HomeObject]]를 가짐. super 참조는 내부 슬롯을 사용해 수퍼클래스의 메서드를 참조하므로 super 키워드 사용할 수 있음.
 
 ### 26-09
 
@@ -203,6 +237,8 @@ const derived = {
 console.log(derived.sayHi()); // Hi! Lee. how are you doing?
 ```
 
+ES6 메서드가 아닌 함수는 super 키워드 사용할 수 없음. 내부 슬롯 [[HomeObject]]를 갖지 않기 때문.
+
 ### 26-10
 
 ```javascript
@@ -216,6 +252,8 @@ const derived = {
   },
 };
 ```
+
+=> 메서드는 본연의 기능(super)을 추가, 의미적으로 맞지 않는 기능(constructor) 제거.
 
 # 26.3 화살표 함수
 
@@ -754,6 +792,8 @@ foo(1, 2); // ReferenceError: arguments is not defined
 
 ## 26.4.1. 기본 문법
 
+매개변수 이름 앞에 ...을 붙여서 정의한 매개변수 : 함수에 전달된 인수들의 목록을 배열로 전달 받음.
+
 ### 26-49
 
 ```javascript
@@ -766,6 +806,8 @@ foo(1, 2, 3, 4, 5);
 ```
 
 ### 26-50
+
+일반 매개변수와 Rest 파라미터는 함께 사용할 수 있음. 순차적으로 할당됨.
 
 ```javascript
 function foo(param, ...rest) {
@@ -786,6 +828,8 @@ bar(1, 2, 3, 4, 5);
 
 ### 26-51
 
+먼저 선언된 매개변수에 할당된 인수를 제외한 나머지 인수들로 구성된 배열이 할당됨. 반드시 마지막 파라미터이어야 함.
+
 ```javascript
 function foo(...rest, param1, param2) { }
 
@@ -795,6 +839,8 @@ foo(1, 2, 3, 4, 5);
 
 ### 26-52
 
+단 하나만 선언할 수 있음
+
 ```javascript
 function foo(...rest1, ...rest2) { }
 
@@ -803,6 +849,8 @@ foo(1, 2, 3, 4, 5);
 ```
 
 ### 26-53
+
+함수 객체의 length 프로퍼티(매개변수 개수)에 영향을 주지 않음
 
 ```javascript
 function foo(...rest) {}
@@ -814,6 +862,10 @@ console.log(bar.length); // 1
 function baz(x, y, ...rest) {}
 console.log(baz.length); // 2
 ```
+
+## 26.4.2 Rest 파라미터와 arguments 객체
+
+ES5까지, 가변 인자 함수의 경우 arguments 객체를 활용해 인자를 유사 배열 객체 모양으로 전달 받아 사용함
 
 ### 26-54
 
@@ -828,6 +880,8 @@ sum(1, 2); // {length: 2, '0': 1, '1': 2}
 ```
 
 ### 26-55
+
+배열 메서드를 사용하려면 Function.prototype.call, Function.prototype.apply 메서드를 사용해 배열로 변환해야 했음
 
 ```javascript
 function sum() {
@@ -844,6 +898,8 @@ console.log(sum(1, 2, 3, 4, 5)); // 15
 
 ### 26-56
 
+Rest 파라미터로 가변 인자 함수의 인수 목록을 배열로 직접 전달받을 수 있음.
+
 ```javascript
 function sum(...args) {
   // Rest 파라미터 args에는 배열 [1, 2, 3, 4, 5]가 할당된다.
@@ -851,6 +907,17 @@ function sum(...args) {
 }
 console.log(sum(1, 2, 3, 4, 5)); // 15
 ```
+
+- 함수
+- ES6 메서드
+  - Rest 파라미터, arguments 객체를 모두 사용할 수 있음
+- 화살표 함수
+  - arguments 객체를 갖지 않아 가반 인자 함수 구현 시 반드시 Rest 파라미터 사용해야 함.
+
+# 26.5 매개변수 기본값
+
+자바스크립트 엔진은 매개변수 개수, 인수 개수를 체크하지 않아 달라도 에러가 발생하지 않음.  
+인수가 전달되지 않은 매개변수의 값은 undefined임. => 의도치 않은 문제가 생길 수 있음
 
 ### 26-57
 
@@ -863,6 +930,8 @@ console.log(sum(1)); // NaN
 ```
 
 ### 26-58
+
+인수가 전달되지 않은 경우 매개변수에 기본값을 할당할 필요가 있음(방어 코드).
 
 ```javascript
 function sum(x, y) {
@@ -879,6 +948,8 @@ console.log(sum(1)); // 1
 
 ### 26-59
 
+ES6의 매개변수 기본값 사용하면 인수 체크 및 초기화를 간소화할 수 있음
+
 ```javascript
 function sum(x = 0, y = 0) {
   return x + y;
@@ -889,6 +960,8 @@ console.log(sum(1)); // 1
 ```
 
 ### 26-60
+
+매개변수 기본값은 인수를 전달하지 않은 경우나 undefined를 전달한 경우에만 유효함
 
 ```javascript
 function logName(name = "Lee") {
@@ -902,6 +975,8 @@ logName(null); // null
 
 ### 26-61
 
+Rest 파라미터에는 기본값 지정할 수 없음
+
 ```javascript
 function foo(...rest = []) {
   console.log(rest);
@@ -910,6 +985,8 @@ function foo(...rest = []) {
 ```
 
 ### 26-62
+
+매개변수 기본값은 함수 정의 시 선언한 매개변수 개수를 나타내는 함수 객체의 length 프로퍼티와 arguments 객체에 아무런 영향을 주지 않음
 
 ```javascript
 function sum(x, y = 0) {
