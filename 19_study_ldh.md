@@ -113,9 +113,9 @@
 
 # 19.1 객체 지향 프로그래밍
 
-: 여러 개의 독립적 단위, 즉 객체의 집함으로 프로그램을 표현하려는 프로그래밍 패러다임.  
+: 여러 개의 독립적 단위, 즉 객체의 집합으로 프로그램을 표현하려는 프로그래밍 패러다임.  
 실세계의 실체를 인식하는 철학적 사고를 프로그래밍에 접목하려는 시도에서 시작.  
-실체는 특징이나 성질을 나타내는 `속성`이 있고, 이를 통해 실체를 인식하거나 구분함.
+실체는 특징이나 성질을 나타내는 `속성(attribute, property)`이 있고, 이를 통해 실체를 인식하거나 구분함.
 
 추상화(abstraction) : 다양한 속성 중에서 프로그램에 필요한 속성만 간추려 내어 표현하는 것
 
@@ -127,8 +127,8 @@
 ```javascript
 // 이름과 주소 속성을 갖는 객체
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
 };
 
 console.log(person); // {name: "Lee", address: "Seoul"}
@@ -264,7 +264,7 @@ console.log(circle2.getArea()); // 12.566370614359172
 ### 19-05
 
 ```javascript
-const person = { name: "Lee" };
+const person = { name: 'Lee' };
 ```
 
 **`__proto__`는 접근자 프로퍼티다.**
@@ -295,13 +295,13 @@ console.log(obj.x); // 1
 ### 19-07
 
 ```javascript
-const person = { name: "Lee" };
+const person = { name: 'Lee' };
 
 // person 객체는 __proto__ 프로퍼티를 소유하지 않는다.
-console.log(person.hasOwnProperty("__proto__")); // false
+console.log(person.hasOwnProperty('__proto__')); // false
 
 // __proto__ 프로퍼티는 모든 객체의 프로토타입 객체인 Object.prototype의 접근자 프로퍼티다.
-console.log(Object.getOwnPropertyDescriptor(Object.prototype, "__proto__"));
+console.log(Object.getOwnPropertyDescriptor(Object.prototype, '__proto__'));
 // {get: ƒ, set: ƒ, enumerable: false, configurable: true}
 
 // 모든 객체는 Object.prototype의 접근자 프로퍼티 __proto__를 상속받아 사용할 수 있다.
@@ -371,10 +371,10 @@ console.log(obj.x); // 1
 
 ```javascript
 // 함수 객체는 prototype 프로퍼티를 소유한다.
-(function () {}).hasOwnProperty("prototype"); // -> true
+(function () {}).hasOwnProperty('prototype'); // -> true
 
 // 일반 객체는 prototype 프로퍼티를 소유하지 않는다.
-({}).hasOwnProperty("prototype"); // -> false
+({}).hasOwnProperty('prototype'); // -> false
 ```
 
 ### 19-12
@@ -388,7 +388,7 @@ const Person = (name) => {
 };
 
 // non-constructor는 prototype 프로퍼티를 소유하지 않는다.
-console.log(Person.hasOwnProperty("prototype")); // false
+console.log(Person.hasOwnProperty('prototype')); // false
 
 // non-constructor는 프로토타입을 생성하지 않는다.
 console.log(Person.prototype); // undefined
@@ -399,7 +399,7 @@ const obj = {
 };
 
 // non-constructor는 prototype 프로퍼티를 소유하지 않는다.
-console.log(obj.foo.hasOwnProperty("prototype")); // false
+console.log(obj.foo.hasOwnProperty('prototype')); // false
 
 // non-constructor는 프로토타입을 생성하지 않는다.
 console.log(obj.foo.prototype); // undefined
@@ -429,7 +429,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 결국 Person.prototype과 me.__proto__는 결국 동일한 프로토타입을 가리킨다.
 console.log(Person.prototype === me.__proto__); // true
@@ -454,7 +454,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // me 객체의 생성자 함수는 Person이다.
 console.log(me.constructor === Person); // true
@@ -474,7 +474,7 @@ const obj = new Object();
 console.log(obj.constructor === Object); // true
 
 // add 함수 객체를 생성한 생성자 함수는 Function이다.
-const add = new Function("a", "b", "return a + b");
+const add = new Function('a', 'b', 'return a + b');
 console.log(add.constructor === Function); // true
 
 // 생성자 함수
@@ -483,7 +483,7 @@ function Person(name) {
 }
 
 // me 객체를 생성한 생성자 함수는 Person이다.
-const me = new Person("Lee");
+const me = new Person('Lee');
 console.log(me.constructor === Person); // true
 ```
 
@@ -541,7 +541,7 @@ obj = new Object(123);
 console.log(obj); // Number {123}
 
 // String  객체 생성
-obj = new Object("123");
+obj = new Object('123');
 console.log(obj); // String {"123"}
 ```
 
@@ -678,7 +678,8 @@ window.Object === Object; // true
 
 ## 19.6.1 객체 리터럴에 의해 생성된 객체의 프로토타입
 
-객체를 생성할 때 추상 연산 OrdinaryObjectCreate를 호출함.
+객체를 생성할 때 추상 연산 OrdinaryObjectCreate를 호출함.  
+이때 전달되는 프로토타입은 Object.prototype임.
 
 ### 19-23
 
@@ -693,10 +694,15 @@ const obj = { x: 1 };
 
 // 객체 리터럴에 의해 생성된 obj 객체는 Object.prototype을 상속받는다.
 console.log(obj.constructor === Object); // true
-console.log(obj.hasOwnProperty("x")); // true
+console.log(obj.hasOwnProperty('x')); // true
 ```
 
+객체 리터럴에 의해 생성된 obj 객체는 Object.prototype을 프로토타입으로 갖게 되어 상속 받음.  
+때문에 이 객체는 자신이 constructor 프로퍼티와 hasOwnProperty 메서드 등을 소유하지 않지만 프로토타입의 constructor와 hasOwnProperty를 자신의 것처럼 자유롭게 사용할 수 있음.
+
 ## 19.6.2 Object 생성자 함수에 의해 생성된 객체의 프로토타입
+
+추상 연산 OrdinaryObjectCreate를 호출. Object.prototype이 프로토타입으로 전달됨.
 
 ### 19-25
 
@@ -713,10 +719,17 @@ obj.x = 1;
 
 // Object 생성자 함수에 의해 생성된 obj 객체는 Object.prototype을 상속받는다.
 console.log(obj.constructor === Object); // true
-console.log(obj.hasOwnProperty("x")); // true
+console.log(obj.hasOwnProperty('x')); // true
 ```
 
+객체 리터럴과 Object 생성자 함수에 의한 객체 생성 방식의 차이 : 프로퍼티를 추가하는 방식.  
+객체 리터럴 방식 : 객체 리터럴 내부에 추가
+Object 생성자 함수 방식 : 일단 빈 객체를 생성한 이후 프로퍼티 추가
+
 ## 19.6.3 생성자 함수에 의해 생성된 객체의 프로토타입
+
+추상 연산 OrdinaryObjectCreate를 호출. 전달되는 프로토타입은 생성자 함수의 prototype 프로퍼티에 바인딩되어 있는 객체.  
+=> 생성자 함수에 의해 생성되는 객체의 프로토타입은 생성자의 함수의 prototype 프로퍼티에 바인딩되어 있는 객체.
 
 ### 19-27
 
@@ -725,10 +738,16 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 ```
 
+표준 빌트인 객체인 Object 생성자 함수와 더불어 생성된 프로토타입 Object.prototype은 다양한 빌트인 메서드를 갖고 있지만  
+사용자 정의 생성자 함수 Person과 더불어 생성된 프로토타입 Person.prototype의 프로퍼티는 constructor뿐임.
+
 ### 19-28
+
+프로토타입 Person.prototype에 프로퍼티 추가하여 하위(자식) 객체가 상속받을 수 있도록 구현.  
+프로토타입은 객체이기에 프로퍼티를 추가/삭제할 수 있음. 프로토타입 체인에 즉각 반영됨.
 
 ```javascript
 function Person(name) {
@@ -740,12 +759,14 @@ Person.prototype.sayHello = function () {
   console.log(`Hi! My name is ${this.name}`);
 };
 
-const me = new Person("Lee");
-const you = new Person("Kim");
+const me = new Person('Lee');
+const you = new Person('Kim');
 
 me.sayHello(); // Hi! My name is Lee
 you.sayHello(); // Hi! My name is Kim
 ```
+
+Person 생성자 함수를 통해 생성된 모든 객체는 프로토타입에 추가된 sayHello 메서드를 상속받아 자신의 메서드처럼 사용할 수 있음.
 
 # 19.7 프로토타입 체인
 
@@ -761,10 +782,10 @@ Person.prototype.sayHello = function () {
   console.log(`Hi! My name is ${this.name}`);
 };
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // hasOwnProperty는 Object.prototype의 메서드다.
-console.log(me.hasOwnProperty("name")); // true
+console.log(me.hasOwnProperty('name')); // true
 ```
 
 ### 19-30
@@ -784,13 +805,13 @@ Object.getPrototypeOf(Person.prototype) === Object.prototype; // -> true
 ```javascript
 // hasOwnProperty는 Object.prototype의 메서드다.
 // me 객체는 프로토타입 체인을 따라 hasOwnProperty 메서드를 검색하여 사용한다.
-me.hasOwnProperty("name"); // -> true
+me.hasOwnProperty('name'); // -> true
 ```
 
 ### 19-33
 
 ```javascript
-Object.prototype.hasOwnProperty.call(me, "name");
+Object.prototype.hasOwnProperty.call(me, 'name');
 ```
 
 ### 19-34
@@ -802,7 +823,7 @@ console.log(me.foo); // undefined
 ### 19-35
 
 ```javascript
-me.hasOwnProperty("name");
+me.hasOwnProperty('name');
 ```
 
 # 19.8 오버라이딩과 프로퍼티 섀도잉
@@ -825,7 +846,7 @@ const Person = (function () {
   return Person;
 })();
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 인스턴스 메서드
 me.sayHello = function () {
@@ -890,7 +911,7 @@ const Person = (function () {
   return Person;
 })();
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 ```
 
 ### 19-41
@@ -922,7 +943,7 @@ const Person = (function () {
   return Person;
 })();
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // constructor 프로퍼티가 생성자 함수를 가리킨다.
 console.log(me.constructor === Person); // true
@@ -938,7 +959,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 프로토타입으로 교체할 객체
 const parent = {
@@ -971,7 +992,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 프로토타입으로 교체할 객체
 const parent = {
@@ -1010,7 +1031,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // Person.prototype이 me 객체의 프로토타입 체인 상에 존재하므로 true로 평가된다.
 console.log(me instanceof Person); // true
@@ -1027,7 +1048,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 프로토타입으로 교체할 객체
 const parent = {};
@@ -1054,7 +1075,7 @@ function Person(name) {
   this.name = name;
 }
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 프로토타입으로 교체할 객체
 const parent = {};
@@ -1117,7 +1138,7 @@ const Person = (function () {
   return Person;
 })();
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // constructor 프로퍼티와 생성자 함수 간의 연결은 파괴되어도 instanceof는 아무런 영향을 받지 않는다.
 console.log(me.constructor === Person); // false
@@ -1173,7 +1194,7 @@ function Person(name) {
 // obj → Person.prototype → Object.prototype → null
 // obj = new Person('Lee')와 동일하다.
 obj = Object.create(Person.prototype);
-obj.name = "Lee";
+obj.name = 'Lee';
 console.log(obj.name); // Lee
 console.log(Object.getPrototypeOf(obj) === Person.prototype); // true
 ```
@@ -1183,8 +1204,8 @@ console.log(Object.getPrototypeOf(obj) === Person.prototype); // true
 ```javascript
 const obj = { a: 1 };
 
-obj.hasOwnProperty("a"); // -> true
-obj.propertyIsEnumerable("a"); // -> true
+obj.hasOwnProperty('a'); // -> true
+obj.propertyIsEnumerable('a'); // -> true
 ```
 
 ### 19-53
@@ -1197,7 +1218,7 @@ obj.a = 1;
 console.log(Object.getPrototypeOf(obj) === null); // true
 
 // obj는 Object.prototype의 빌트인 메서드를 사용할 수 없다.
-console.log(obj.hasOwnProperty("a")); // TypeError: obj.hasOwnProperty is not a function
+console.log(obj.hasOwnProperty('a')); // TypeError: obj.hasOwnProperty is not a function
 ```
 
 ### 19-54
@@ -1210,7 +1231,7 @@ obj.a = 1;
 // console.log(obj.hasOwnProperty('a')); // TypeError: obj.hasOwnProperty is not a function
 
 // Object.prototype의 빌트인 메서드는 객체로 직접 호출하지 않는다.
-console.log(Object.prototype.hasOwnProperty.call(obj, "a")); // true
+console.log(Object.prototype.hasOwnProperty.call(obj, 'a')); // true
 ```
 
 ## 19.11.2 객체 리터럴 내부에서 `__proto__`에 의한 직접 상속
@@ -1253,14 +1274,14 @@ Person.prototype.sayHello = function () {
 };
 
 // 정적 프로퍼티
-Person.staticProp = "static prop";
+Person.staticProp = 'static prop';
 
 // 정적 메서드
 Person.staticMethod = function () {
-  console.log("staticMethod");
+  console.log('staticMethod');
 };
 
-const me = new Person("Lee");
+const me = new Person('Lee');
 
 // 생성자 함수에 추가한 정적 프로퍼티/메서드는 생성자 함수로 참조/호출한다.
 Person.staticMethod(); // staticMethod
@@ -1274,10 +1295,10 @@ me.staticMethod(); // TypeError: me.staticMethod is not a function
 
 ```javascript
 // Object.create는 정적 메서드다.
-const obj = Object.create({ name: "Lee" });
+const obj = Object.create({ name: 'Lee' });
 
 // Object.prototype.hasOwnProperty는 프로토타입 메서드다.
-obj.hasOwnProperty("name"); // -> false
+obj.hasOwnProperty('name'); // -> false
 ```
 
 ### 19-58
@@ -1288,7 +1309,7 @@ function Foo() {}
 // 프로토타입 메서드
 // this를 참조하지 않는 프로토타입 메소드는 정적 메서드로 변경해도 동일한 효과를 얻을 수 있다.
 Foo.prototype.x = function () {
-  console.log("x");
+  console.log('x');
 };
 
 const foo = new Foo();
@@ -1297,7 +1318,7 @@ foo.x(); // x
 
 // 정적 메서드
 Foo.x = function () {
-  console.log("x");
+  console.log('x');
 };
 
 // 정적 메서드는 인스턴스를 생성하지 않아도 호출할 수 있다.
@@ -1312,31 +1333,31 @@ Foo.x(); // x
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
 };
 
 // person 객체에 name 프로퍼티가 존재한다.
-console.log("name" in person); // true
+console.log('name' in person); // true
 // person 객체에 address 프로퍼티가 존재한다.
-console.log("address" in person); // true
+console.log('address' in person); // true
 // person 객체에 age 프로퍼티가 존재하지 않는다.
-console.log("age" in person); // false
+console.log('age' in person); // false
 ```
 
 ### 19-60
 
 ```javascript
-console.log("toString" in person); // true
+console.log('toString' in person); // true
 ```
 
 ### 19-61
 
 ```javascript
-const person = { name: "Lee" };
+const person = { name: 'Lee' };
 
-console.log(Reflect.has(person, "name")); // true
-console.log(Reflect.has(person, "toString")); // true
+console.log(Reflect.has(person, 'name')); // true
+console.log(Reflect.has(person, 'toString')); // true
 ```
 
 ## 19.13.2 Object.prototype.hasOwnProperty 메서드
@@ -1344,14 +1365,14 @@ console.log(Reflect.has(person, "toString")); // true
 ### 19-62
 
 ```javascript
-console.log(person.hasOwnProperty("name")); // true
-console.log(person.hasOwnProperty("age")); // false
+console.log(person.hasOwnProperty('name')); // true
+console.log(person.hasOwnProperty('age')); // false
 ```
 
 ### 19-63
 
 ```javascript
-console.log(person.hasOwnProperty("toString")); // false
+console.log(person.hasOwnProperty('toString')); // false
 ```
 
 # 19.14 프로퍼티 열거
@@ -1362,13 +1383,13 @@ console.log(person.hasOwnProperty("toString")); // false
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
 };
 
 // for...in 문의 변수 key에 person 객체의 프로퍼티 키가 할당된다.
 for (const key in person) {
-  console.log(key + ": " + person[key]);
+  console.log(key + ': ' + person[key]);
 }
 // name: Lee
 // address: Seoul
@@ -1378,17 +1399,17 @@ for (const key in person) {
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
 };
 
 // in 연산자는 객체가 상속받은 모든 프로토타입의 프로퍼티를 확인한다.
-console.log("toString" in person); // true
+console.log('toString' in person); // true
 
 // for...in 문도 객체가 상속받은 모든 프로토타입의 프로퍼티를 열거한다.
 // 하지만 toString과 같은 Object.prototype의 프로퍼티가 열거되지 않는다.
 for (const key in person) {
-  console.log(key + ": " + person[key]);
+  console.log(key + ': ' + person[key]);
 }
 
 // name: Lee
@@ -1400,7 +1421,7 @@ for (const key in person) {
 ```javascript
 // Object.getOwnPropertyDescriptor 메서드는 프로퍼티 디스크립터 객체를 반환한다.
 // 프로퍼티 디스크립터 객체는 프로퍼티 어트리뷰트 정보를 담고 있는 객체다.
-console.log(Object.getOwnPropertyDescriptor(Object.prototype, "toString"));
+console.log(Object.getOwnPropertyDescriptor(Object.prototype, 'toString'));
 // {value: ƒ, writable: true, enumerable: false, configurable: true}
 ```
 
@@ -1408,13 +1429,13 @@ console.log(Object.getOwnPropertyDescriptor(Object.prototype, "toString"));
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
   __proto__: { age: 20 },
 };
 
 for (const key in person) {
-  console.log(key + ": " + person[key]);
+  console.log(key + ': ' + person[key]);
 }
 // name: Lee
 // address: Seoul
@@ -1431,7 +1452,7 @@ const obj = {
 };
 
 for (const key in obj) {
-  console.log(key + ": " + obj[key]);
+  console.log(key + ': ' + obj[key]);
 }
 // a: 1
 ```
@@ -1440,15 +1461,15 @@ for (const key in obj) {
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
   __proto__: { age: 20 },
 };
 
 for (const key in person) {
   // 객체 자신의 프로퍼티인지 확인한다.
   if (!person.hasOwnProperty(key)) continue;
-  console.log(key + ": " + person[key]);
+  console.log(key + ': ' + person[key]);
 }
 // name: Lee
 // address: Seoul
@@ -1461,13 +1482,13 @@ const obj = {
   2: 2,
   3: 3,
   1: 1,
-  b: "b",
-  a: "a",
+  b: 'b',
+  a: 'a',
 };
 
 for (const key in obj) {
   if (!obj.hasOwnProperty(key)) continue;
-  console.log(key + ": " + obj[key]);
+  console.log(key + ': ' + obj[key]);
 }
 
 /*
@@ -1510,8 +1531,8 @@ for (const value of arr) {
 
 ```javascript
 const person = {
-  name: "Lee",
-  address: "Seoul",
+  name: 'Lee',
+  address: 'Seoul',
   __proto__: { age: 20 },
 };
 
