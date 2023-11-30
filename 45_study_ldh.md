@@ -9,12 +9,13 @@
     - [45-06](#45-06)
     - [45-07](#45-07)
     - [45-08](#45-08)
+  - [45.1.2 에러 처리의 한계](#4512-에러-처리의-한계)
     - [45-09](#45-09)
 - [45.2 프로미스의 생성](#452-프로미스의-생성)
-    - [45-10](#45-10)
-    - [45-11](#45-11)
-    - [45-12](#45-12)
-    - [45-13](#45-13)
+  - [45-10](#45-10)
+  - [45-11](#45-11)
+  - [45-12](#45-12)
+  - [45-13](#45-13)
 - [45.3 프로미스의 후속 처리 메서드](#453-프로미스의-후속-처리-메서드)
   - [45.3.1 Promise.prototype.then](#4531-promiseprototypethen)
     - [45-14](#45-14)
@@ -25,14 +26,14 @@
     - [45-17](#45-17)
     - [45-18](#45-18)
 - [45.4 프로미스의 에러 처리](#454-프로미스의-에러-처리)
-    - [45-19](#45-19)
-    - [45-20](#45-20)
-    - [45-21](#45-21)
-    - [45-22](#45-22)
-    - [45-23](#45-23)
+  - [45-19](#45-19)
+  - [45-20](#45-20)
+  - [45-21](#45-21)
+  - [45-22](#45-22)
+  - [45-23](#45-23)
 - [45.5 프로미스 체이닝](#455-프로미스-체이닝)
-    - [45-24](#45-24)
-    - [45-25](#45-25)
+  - [45-24](#45-24)
+  - [45-25](#45-25)
 - [45.6 프로미스의 정적 메서드](#456-프로미스의-정적-메서드)
   - [45.6.1 Promise.resolve / Promise.reject](#4561-promiseresolve--promisereject)
     - [45-26](#45-26)
@@ -45,20 +46,26 @@
     - [45-32](#45-32)
     - [45-33](#45-33)
     - [45-34](#45-34)
+  - [45.6.3 Promise.race](#4563-promiserace)
     - [45-35](#45-35)
     - [45-36](#45-36)
+  - [45.6.4 Promise.allSettled](#4564-promiseallsettled)
     - [45-37](#45-37)
     - [45-38](#45-38)
-    - [45-39](#45-39)
-    - [45-40](#45-40)
-    - [45-41](#45-41)
-    - [45-42](#45-42)
-    - [45-43](#45-43)
-    - [45-44](#45-44)
-    - [45-45](#45-45)
-    - [45-46](#45-46)
-    - [45-47](#45-47)
-    - [45-48](#45-48)
+- [45.7 마이크로태스크 큐](#457-마이크로태스크-큐)
+  - [45-39](#45-39)
+- [45.8 fetch](#458-fetch)
+  - [45-40](#45-40)
+  - [45-41](#45-41)
+  - [45-42](#45-42)
+  - [1. GET 요청](#1-get-요청)
+  - [45-43](#45-43)
+  - [2. POST 요청](#2-post-요청)
+  - [45-44](#45-44)
+  - [3. PATCH 요청](#3-patch-요청)
+  - [45-45](#45-45)
+  - [4. DELETE 요청](#4-delete-요청)
+  - [45-46](#45-46)
 
 # 45장 프로미스
 
@@ -121,6 +128,17 @@ setTimeout(() => {
 console.log(g); // 0
 ```
 
+get 함수도 비동기 함수.  
+이유 : get 함수 내부의 onload 이벤트 핸들러가 비동기로 동작하기 때문.
+
+get 함수를 호출하면  
+GET 요청을 전송하고  
+onload 이벤트 핸들러를 등록한 다음  
+undefined를 반환하고 즉시 종료됨
+
+비동기 함수인 get 함수 내부의 onload 이벤트 핸들러는 get 함수가 종료된 이후에 실행됨  
+get 함수의 onload 이벤트 핸들러에서 서버의 응답 결과를 반환하거나 상위 스코프의 변수에 할당하면 기대한 대로 동작하지 않음
+
 ### 45-03
 
 ```javascript
@@ -143,6 +161,14 @@ const get = (url) => {
 const response = get('https://jsonplaceholder.typicode.com/posts/1');
 console.log(response); // undefined
 ```
+
+- get 함수가 호출되면 XMLHttpRequest 객체를 생성하고
+- HTTP 요청을 초기화한 후
+- HTTP 요청을 전송함
+- xhr.onload 이벤트 핸들러 프로퍼티에 이벤트 핸들러를 바인딩하고 종료함
+- get 함수에 명시적인 반환문이 없으므로 get 함수는 undefined를 반환함
+
+xhr.onload 이벤트 핸들러 프로퍼티에 바인딩한 이벤트 핸들러의 반환문은 get 함수의 반환문이 아니다.
 
 ### 45-04
 
@@ -188,6 +214,15 @@ get('https://jsonplaceholder.typicode.com/posts/1');
 console.log(todos); // ② undefined
 ```
 
+비동기 함수는 비동기 처리 결과를 외부에 반환할 수 없고  
+상위 스코프의 변수에 할당할 수도 없음.  
+비동기 함수의 처리 결과(서버 응답 등)에 대한 후속 처리는 비동기 함수 내부에서 수행해야 함
+
+이때 비동기 함수를 범용적으로 사용하기 위해  
+비동기 함수에 대한 비동기 처리 결과에 대한 후속 처리를 수행하는 콜백 함수를 전달하는 것이 일반적.  
+필요에 따라 비동기 처리가 성공하면 호출될 콜백 함수와  
+비동기 처리가 실패하면 호출될 콜백 함수를 전달할 수 있음
+
 ### 45-06
 
 ```javascript
@@ -220,6 +255,8 @@ get('https://jsonplaceholder.typicode.com/posts/1', console.log, console.error);
 }
 */
 ```
+
+콜백 헬 : 콜백 함수 호출이 중첩되어 복잡도가 높아지는 현상
 
 ### 45-07
 
@@ -266,6 +303,10 @@ get('/step1', (a) => {
 });
 ```
 
+## 45.1.2 에러 처리의 한계
+
+문제점 중 가장 심각한 것은 에러 처리가 곤란하다는 것.
+
 ### 45-09
 
 ```javascript
@@ -278,6 +319,17 @@ try {
   console.error('캐치한 에러', e);
 }
 ```
+
+1. 비동기 함수 setTimeout 호출
+2. setTimeout 함수의 실행 컨텍스트 생성되어 콜 스택에 푸시되어 실행
+3. setTimeout은 비동기 함수이므로 콜백 함수가 호출되는 것을 기다리지 않고 즉시 종료되어 콜 스택에서 제거
+4. 타이머가 만료되면 콜백 함수는 태스크 큐로 푸시됨
+5. 콜 스택이 비어졌을 때 이벤트 루프에 의해 콜 스택으로 푸시되어 실행됨
+
+- setTimeout 함수의 콜백 함수가 실행될 때 setTimeout 함수는 이미 콜 스택에서 제거된 상태.
+- setTimeout 함수의 콜백 함수를 호출한 것이 setTimeout 함수가 아닌 것
+
+에러는 호출자(caller) 방향으로 잔파됨. 즉, 콜 스택의 아래 방향(실행 중인 실행 컨텍스트가 푸시되기 직전에 푸시된 실행 컨텍스트 방향)으로 전파됨. 그러나 setTimeout 함수의 콜백 함수를 호출한 것은 setTimeout 함수가 아니기에 에러가 catch 블록에서 캐치되지 않는 것
 
 # 45.2 프로미스의 생성
 
@@ -640,6 +692,8 @@ rejectedPromise.catch(console.log); // Error: Error!
 
 ### 45-30
 
+세 개의 비동기 처리를 순차적으로 처리.
+
 ```javascript
 const requestData1 = () =>
   new Promise((resolve) => setTimeout(() => resolve(1), 3000));
@@ -666,7 +720,11 @@ requestData1()
   .catch(console.error);
 ```
 
+=> 개별 수행 비동기 처리는 순차적으로 ㅓ리할 필요 없음
+
 ### 45-31
+
+Promise.all 메서드로 여러 개의 비동기 처리를 모두 병렬 처리
 
 ```javascript
 const requestData1 = () =>
@@ -681,7 +739,15 @@ Promise.all([requestData1(), requestData2(), requestData3()])
   .catch(console.error);
 ```
 
+=> 프로미스를 요소로 갖는 배열 등의 이터러블을 인수로 전달받음. 모두 fulfilled 상태가 되면 처리 결과를 배열에 저장해 새로운 프로미스를 반환함
+
+첫 번째 프로미스가 가장 나중에 fulfilled 되어도 차례대로 배열에 저장하기 때문에 `처리 순서가 보장됨`
+
+하나라도 rejected 상태가 되면 즉시 종료
+
 ### 45-32
+
+세 번째 프로미스가 가장 먼저 rejected 상태가 되므로 세 번째 프로미스가 reject한 에러가 catch 메서드로 전달됨
 
 ```javascript
 Promise.all([
@@ -700,6 +766,8 @@ Promise.all([
 ```
 
 ### 45-33
+
+인수의 이터러블 요소가 프로미스가 아닌 경우 Promise.resolve 메서드를 통해 프로미스로 래핑함
 
 ```javascript
 Promise.all([
@@ -745,6 +813,13 @@ Promise.all(
   .catch(console.error);
 ```
 
+promiseGet 함수가 반환한 3개의 프로미스로 이루어진 배열을 인수로 전달받고  
+모두 fulfilled 상태가 되면 처리 결과를 배열에 저장해 새로운 프로미스를 반환함
+
+## 45.6.3 Promise.race
+
+프로미스를 요소로 갖는 배열 등의 이터러블을 인수로 전달받음. 가장 먼저 fulfilled 상태가 된 프로미스의 처리 결과를 resolve하는 새로운 프로미스를 반환함
+
 ### 45-35
 
 ```javascript
@@ -758,6 +833,8 @@ Promise.race([
 ```
 
 ### 45-36
+
+프로미스가 하나라도 rejected 상태가 되면 에러를 reject하는 새로운 프로미스를 즉시 반환
 
 ```javascript
 Promise.race([
@@ -774,6 +851,10 @@ Promise.race([
   .then(console.log)
   .catch(console.log); // Error: Error 3
 ```
+
+## 45.6.4 Promise.allSettled
+
+프로미스를 요소로 갖는 배열 등의 이터러블을 인수로 전달받음. 모두 settled(fulfilled or rejected) 상태가 되면 처리 결과를 배열로 반환
 
 ### 45-37
 
@@ -792,6 +873,10 @@ Promise.allSettled([
 */
 ```
 
+- 모든 프로미스들의 처리 결과가 모두 담겨 있음
+  - fulfilled 상태인 경우 status 프로퍼티와 처리 결과를 나타내는 value 프로퍼티를 가짐
+  - rejected 상태인 경우 status 프로퍼티와 에러를 나타내는 reason 프로퍼티를 가짐
+
 ### 45-38
 
 ```javascript
@@ -803,6 +888,8 @@ Promise.allSettled([
 ]
 ```
 
+# 45.7 마이크로태스크 큐
+
 ### 45-39
 
 ```javascript
@@ -813,6 +900,27 @@ Promise.resolve()
   .then(() => console.log(3));
 ```
 
+=> 출력 순서 : 2 -> 3 -> 1
+
+프로미스의 후속 처리 메서드의 콜백 함수는 마이크로태스크 큐에 저장됨
+
+마이크로태스크 큐 : 태스크 큐와는 별도의 큐. 프로미스의 후속 처리 메서드의 콜백 함수가 일시 저장됨.
+
+그 외의 비동기 함수의 콜백 함수, 이벤트 핸들러는 태스크 큐에 일시 저장됨.
+
+마이크로태스크 큐의 우선 순위가 태스크 큐보다 높음.
+
+콜 스택 => 마이크로태스크 큐 => 태스크 큐
+
+이벤트 루프는 콜 스택이 비면 마이크로태스크 큐에서 대기하고 있는 함수를 가져와 실행함. 이후 마이크로태스크 큐가 비면 태스크 큐에 있는 함수를 가져와 실행함
+
+# 45.8 fetch
+
+fetch 함수 : HTTP 요청 전송 기능을 제공하는 클라이언트 사이드 Web API.  
+XMLHttpRequest 객체보다 사용법이 간단하고 프로미스를 지원하기 때문에 비동기 처리를 위한 콜백 패턴의 단점에서 자유로움.
+
+fetch 함수는 HTTP 응답을 나타내는 Response 객체를 래핑한 Promise 객체를 반환함.
+
 ### 45-40
 
 ```javascript
@@ -820,6 +928,12 @@ fetch('https://jsonplaceholder.typicode.com/todos/1').then((response) =>
   console.log(response)
 );
 ```
+
+=> HTTP 응답을 나타내는 Response 객체를 래핑한 `프로미스를 반환하므로` 후속 처리 메서드 then을 통해 프로미스가 resolve한 Response 객체를 전달받을 수 있음
+
+Response 객체는 HTTP 응답을 나타내는 다양한 프로퍼티를 제공함  
+Response.prototype에는 Response 객체에 포함되어 있는 HTTP 응답 몸체를 위한 다양한 메서드를 제공함  
+ex) Response.prototype.json - 역직렬화
 
 ### 45-41
 
@@ -833,34 +947,9 @@ fetch('https://jsonplaceholder.typicode.com/todos/1')
 // {userId: 1, id: 1, title: "delectus aut autem", completed: false}
 ```
 
+fetch 함수 첫 번째 인수로 HTTP 요청을 전송할 URL과 두 번째 인수로 HTTP 요청 메서드, HTTP 요청 헤더, 페이로드 등을 설정한 객체를 전달함
+
 ### 45-42
-
-```javascript
-const wrongUrl = 'https://jsonplaceholder.typicode.com/XXX/1';
-
-// 부적절한 URL이 지정되었기 때문에 404 Not Found 에러가 발생한다.
-fetch(wrongUrl)
-  .then(() => console.log('ok'))
-  .catch(() => console.log('error'));
-```
-
-### 45-43
-
-```javascript
-const wrongUrl = 'https://jsonplaceholder.typicode.com/XXX/1';
-
-// 부적절한 URL이 지정되었기 때문에 404 Not Found 에러가 발생한다.
-fetch(wrongUrl)
-  // response는 HTTP 응답을 나타내는 Response 객체다.
-  .then((response) => {
-    if (!response.ok) throw new Error(response.statusText);
-    return response.json();
-  })
-  .then((todo) => console.log(todo))
-  .catch((err) => console.error(err));
-```
-
-### 45-44
 
 ```javascript
 const request = {
@@ -887,7 +976,9 @@ const request = {
 };
 ```
 
-### 45-45
+### 1. GET 요청
+
+### 45-43
 
 ```javascript
 request
@@ -901,7 +992,9 @@ request
 // {userId: 1, id: 1, title: "delectus aut autem", completed: false}
 ```
 
-### 45-46
+### 2. POST 요청
+
+### 45-44
 
 ```javascript
 request
@@ -919,7 +1012,9 @@ request
 // {userId: 1, title: "JavaScript", completed: false, id: 201}
 ```
 
-### 45-47
+### 3. PATCH 요청
+
+### 45-45
 
 ```javascript
 request
@@ -935,7 +1030,9 @@ request
 // {userId: 1, id: 1, title: "delectus aut autem", completed: true}
 ```
 
-### 45-48
+### 4. DELETE 요청
+
+### 45-46
 
 ```javascript
 request
