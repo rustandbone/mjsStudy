@@ -1,39 +1,38 @@
 # 39장 DOM
 
-- HTML 문서의 계층 구조와 정보를 표현 & 제어 할수 있는 API
+- **HTML 문서의 계층 구조**와 **정보를 표현 & 제어 할수 있는 API**
 - 프로퍼티와 메서드를 제공하는 트리 자료구조
 
-## 📌39.1 NODE
+## 📌39.1 NODE(DOM을 구성하는 요소)
 
 ### ✏️39.1.1 HTML 요소와 노드 객체
 
-- HTML 요소: HTML문서를 구성하는 개별적인 요소
-- HYML 요소 -> 렌더링 엔진에 의해 파싱 -> DOM을 구성하는 요소 노드 객체로 변환
-- HTML요소 어트리뷰트-> 어트리뷰트 노드
-- HTML요소 텍스트 콘텐츠 -> 텍스트 노드
-  ![Alt text](image-7.png)
+- **HTML 요소**: HTML문서를 구성하는 개별적인 요소
+- HTML 요소 ➡️ 렌더링 엔진에 의해 파싱 ➡️ DOM을 구성하는 요소 노드 객체로 변환
+  - HTML요소 어트리뷰트➡️ 어트리뷰트 노드
+  - HTML요소 텍스트 콘텐츠 ➡️ 텍스트 노드
+    ![Alt text](image-7.png)
 
-HTML문서 : HTML요소들의 집합, 중첩 관계
--> HTML요소산에 중첩관계 -> 계층적인 부자관계 형성
+**HTML문서** : HTML요소들의 집합, 중첩 관계
+➡️ HTML요소산에 중첩관계 ➡️ 계층적인 부자관계 형성
 
 - 이 관계를 반영하여 HTML 요소를 객체화한 모든 노드 객체들 -> 트리자료로 구성
 
-#### 트리 자료구조
+#### 🎄트리 자료구조
 
-트리 자료구조 : 노드들의 계층 구조로 이뤄짐
+**트리 자료구조**: 노드들의 계층 구조로 이뤄짐
 -> 부모노드와 자식노드로 구성, 노드간의 계층적 구조(비선형 자료구조)
 
 - 하나의 최상위 노드(루트노드)에서 시작, 최상위 노드는 부모노드가 없음
-- 루트노드 0개 이상의 자식 노드 가짐.
-- 리프노드 : 자식노드가 없는 노드
+- 루트노드 0개 이상의 자식 노드 가짐. \*리프노드 : 자식노드가 없는 노드
   ![Alt text](image-8.png)
 
-➡️노드 객체들로 구성된 트리 자료구조 = DOM
-(노드 객체의 트리라고 _DOM트리_ 라고도 부름)
+➡️노드 객체들로 구성된 트리 자료구조 = **DOM**
+(노드 객체의 트리라고 **DOM트리** 라고도 부름)
 
 ### ✏️39.1.2 노드 객체의 타입
 
-HTML 문서를 랜더링 엔진이 파싱!
+HTML 문서를 파싱🔁 노드 객체
 
 #### 39-01
 
@@ -59,30 +58,32 @@ HTML 문서를 랜더링 엔진이 파싱!
 
 - 노드객체 종류(12가지)가 있고, 상속구조를 가짐
 
-#### 중요한 노드 타입 4가지
+#### 중요한 노드 타입 4️⃣가지
 
-#### 문서노드
+#### 1️⃣문서 노드(document 객체)
 
-- DOM 트리의 최상위에 존재하는 루트 노드(document 객체)
-- 브라우저가 랜더링한 HTML 문서 전체를 가리키는 객체 -> 전역객체 window의 document 프로퍼티에 바인딩
-- 브라우저 환경의 모든 자바스크립트 코드는 script 태그에 분리되엉 ㅣㅆ어도 하나의 전역 객체 window를 공유 -> 전역 객체 window의 document프로퍼티에 바인딘 된 하나의 document객체를 바라봄.
-- _HTML 문서당 document 객체가 유일_
-- _DOM 트리의 노드들에 접근하기 위한 진입점 역할을 담당_(요소, 어트리뷰트, 텍스트 노드에 접근하려면 문서노드를 통해야함.)
+- **문서노드 = 루트 노드(document 객체)**: DOM 트리의 최상위에 존재하는 노드
+- document 객체: 브라우저가 랜더링한 HTML 문서 전체를 가리키는 객체 ➡️ window의 document 프로퍼티에 바인딩
+- 브라우저 환경의 모든 자바스크립트 코드는 script 태그에 분리되어 있어도 하나의 전역 객체 window를 공유 -> 전역 객체 window의 document프로퍼티에 바인딩 된 하나의 document객체를 바라봄.
+- **HTML 문서당 document 객체가 유일**
+- **DOM 트리의 노드들에 접근하기 위한 진입점 역할을 담당**(요소, 어트리뷰트, 텍스트 노드에 접근하려면 문서노드를 통해야함.)
 
-#### 요소노드
+\*바인딩(Binding): 프로그램의 어떤 기본 단위가 가질 수 있는 구성요소의 구체적인 값, 성격을 확정하는 것
+
+#### 2️⃣요소 노드
 
 - HTML요소를 가리키는 객체
 - 부자 관계를 가지며, 부자관계를 통해 정보를 구조화
-- _문서 구조를 표현_
+- **문서 구조를 표현**
 
-#### 어트리뷰트노드
+#### 3️⃣어트리뷰트 노드
 
 - HTML 요소의 어트리뷰트를 가리키는 객체
-- 부모노드와 열결되어 있지 않고 요소 노드에만 연결
+- 부모노드와 연결되어 있지 않고 요소 노드에만 연결
   ➡️ *부모 노드가 없으므로 요소노드의 형제 노드*✖️
 - 접근: 어트리뷰트를 참조, 변경 -> 먼저 요소노드에 접근
 
-#### 텍스트노드
+#### 4️⃣텍스트노드
 
 - HTML요소의 텍스트를 가리키는 객체
 - 문서 정보를 표현
@@ -93,23 +94,26 @@ HTML 문서를 랜더링 엔진이 파싱!
 
 ### ✏️39.1.3 노드 객체의 상속 구조
 
-- DOM: HTML 문서의 계층적 구조와 정보 표현, 제어할 수 있는 API, 프로퍼티와 메서드를 제공 트리 자료구조
-  -> 노드백체는 부모, 형제, 자식 탐색 가능, 어트리뷰트와 텍스트 조작 가능
+- **DOM:** HTML 문서의 계층적 구조와 정보 표현, 제어할 수 있는 API, 프로퍼티와 메서드를 제공 트리 자료구조
+  ➡️ 노드 객체는 자신의 부모, 형제, 자식 탐색 가능, 어트리뷰트와 텍스트 조작 가능
 
-- DOM을 구성하는 노드 객체 : 브라우저 환경에서 추가적으로 제공하는 호스트 객체
-- BUT 노드 객체도 자바스크립트 객체이므로 프로토 타입에 의한 상속 구조
-  [노드 객체의 상속 구조]
+- DOM을 구성하는 노드 객체: 브라우저 환경에서 추가적으로 제공하는 호스트 객체
+  - \*호스트 객체: 실행 환경에서 제공하는 객체
+- 노드 객체도 자바스크립트 객체이므로 프로토 타입에 의한 상속 구조
+  <br/>
+  [🎄노드 객체의 상속 구조]
   ![Alt text](image-10.png)
-- 모든 노드객체: `Object`, `EventTarget`, `Node` 인터페이스를 상속
-  - 문서 노드 :`Document`, `HTMLDocument` 인터페이스 상속받음
-  - 어트리뷰트 노드: `Attr`
-  - 텍스트 노드: `CharacterData` 인터페이스
-  - 요소 노드: `Element`인터페이스
+
+- **모든 노드객체**: `Object`, `EventTarget`, `Node` 인터페이스를 상속
+  - **문서 노드** :`Document`, `HTMLDocument` 인터페이스 상속받음
+  - **어트리뷰트 노드**: `Attr`
+  - **텍스트 노드**: `CharacterData` 인터페이스
+  - **요소 노드**: `Element`인터페이스
 
 ![Alt text](image-11.png)
 
-- input요소 파싱 -> 객체화한 input 요소 노드 객체는 HTMLInputElement, HTMLElement, Element, Node, EventTarget, Object의 Prototype에 바인딩 되어 있는 프로토타입 객체를 상속 받음
-- **input 요소 노드 객체 프로토타입 체인에 있는 모든 프로토타입의 프로퍼티나 메서드를 상속받아 사용 가능**
+- input요소 파싱 ➡️ 객체화한 input 요소 노드 객체는 HTMLInputElement, HTMLElement, Element, Node, EventTarget, Object의 Prototype에 바인딩 되어 있는 프로토타입 객체를 상속 받음
+- input 요소 노드 객체는 프로토타입 체인에 있는 **모든 프로토타입의 프로퍼티나 메서드를 상속받아 사용 가능**
 
 #### 39-02
 
@@ -138,7 +142,7 @@ HTML 문서를 랜더링 엔진이 파싱!
 ```
 
 ![Alt text](image-12.png)
--> 노드 객체의 상속구조는 개발자 도구 Elements 패널 우측의 Properties패널에서 확인할 수 있음.
+➡️ 노드 객체의 상속구조는 개발자 도구 Elements 패널 우측의 Properties패널에서 확인할 수 있음.
 
 - 모든 노드객체는 공통으로 갖는 기능이 있음
 - 노드 타입에 따라 고유한 기능 있음
@@ -148,35 +152,38 @@ HTML 문서를 랜더링 엔진이 파싱!
 - 이 같은 노드 관련 기능은 Node 인터페이스 제공
 
 <br/>
-- HTML 요소가 객체화된 요소 노드 객체는 HTML요소가 같는 공ㄷ통적인 기능이 있음
+
+- HTML 요소가 객체화된 요소 노드 객체는 HTML요소가 갖는 공통적인 기능이 있음
   -> HTMLElement 인터페이스 제공
   - ex) input요소 노드 객체와 div 요소노드 객체 모두 HTML 요소의 스타일을 나타내는 style 프로퍼티가 있음
-  
-BUT 요소노드 객체는 HTML요소의 종류에 따라 고유한 기능
-- ex) input 요소 노드 객체 - value 프로퍼티 필요, div요소노드 객체 - value 불필요
--> 인터페이스(HTMLInputElement, HTMLDivElement 등 ) HTML요소의 종류에 따라 다름.
+- 요소노드 객체는 HTML요소의 종류에 따라 고유한 기능 있음
+  <!-- - ex) input 요소 노드 객체 - value 프로퍼티 필요, div요소노드 객체 - value 불필요 -->
+
+  - > ➡️ 필요한 인터페이스(HTMLInputElement, HTMLDivElement 등 ) HTML요소의 종류에 따라 다름.
 
 - 노드 객체는 공통된 기능 - 프로토타입 체인의 상위에
 - 개별적인 고유기능 - 프로토타입 체인 하위
-  -> 프로토타입 체인을 구축하여 노드 객체에 필요한 기능, 프로퍼티와 메서드를 제공하는 상속 구조
+  <!-- - >프로토타입 체인을 구축하여 노드 객체에 필요한 기능, 프로퍼티와 메서드를 제공하는 상속 구조 -->
 
-- DOM
+<br/>
+
+- **DOM**
 
   1. HTML 문서의 계층적 구조와 정보 표현
   2. 노드 타입에 따라 필요한 기능을 프로퍼티와 메서드의 집합인 DOM API를 제공
   3. DOM API를 통해 HTML 구조, 내용, 스타일을 동적으로 조작
 
-- HTML과 DOM 연관지어 바라보기
+  > 💁‍♀️HTML과 DOM 연관지어 바라보기
 
 ##📌 39.2 요소 노드 취득
 
 요소노드 취득: HTML 요소를 조작하는 시작점
 
-### ✏️39.2.1 id를 이용한 요소노드 취즉
+### ✏️39.2.1 id를 이용한 요소노드 취득
 
-#### 39-03
+#### 39-03 getElemetById
 
-Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리뷰트 값을 갖는 요소 노드를 탐색하여 반환.
+Document.prototype.getElemetById 메서드 : 인수로 전달한 id 어트리뷰트 값을 갖는 요소 노드를 탐색하여 반환.
 
 - 문서노드인 document를 통해 호출
 
@@ -201,7 +208,7 @@ Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리�
 </html>
 ```
 
-#### 39-04
+#### 39-04 id 값
 
 - id 값: HTML문서 내에서 유일한 값
 - 여러개 값 가질 수 ✖️
@@ -230,7 +237,7 @@ Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리�
 </html>
 ```
 
-#### 39-05
+#### 39-05 id값을 갖은 HTML 요소가 없을 경우
 
 - id값을 갖은 HTML 요소가 없을 경우 -> null 반환
 
@@ -255,9 +262,9 @@ Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리�
 </html>
 ```
 
-#### 39-06
+#### 39-06 id값과 동일한 이름의 전역 변수
 
-- HTML 요소에 id 어트리뷰트를 부여 -> id값과 동일한 이름의 전역 변수가 암묵적으로 선언된다.
+- HTML 요소에 id 어트리뷰트를 부여 ➡️ id값과 동일한 이름의 전역 변수가 암묵적으로 선언된다.
 
 ```html
 <!DOCTYPE html>
@@ -298,11 +305,11 @@ Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리�
 
 ##📌39.2.2 태그 이름을 이용한 요소 노드 취득
 
-#### 39-08
+#### 39-08 getElementsByTagName
 
-- Document.prototype/Element.prototype.getElementsByTagName 메서드
-  - 인수로 전달한 태그 이름을 갖는 모든 요소 노드들을 탐색하여 반환
-  - getElementsByTagName 메서드 : 여러개 요소 노드 객체를 갖는 DOM 컬렉션 객체인 HTMLCollection 객체를 반환
+- `Document.prototype/Element.prototype.getElementsByTagName` 메서드
+  - 인수로 전달한 태그 이름을 갖는 모든 요소 노드들을 반환
+  - 여러개 요소 노드 객체를 갖는 DOM 컬렉션 객체인 `HTMLCollection` 객체를 반환
 
 ```html
 <!DOCTYPE html>
@@ -329,14 +336,13 @@ Document.prototype.getElemetnById 메서드 : 인수로 전달한 id 어트리�
 </html>
 ```
 
-- 함수
-  - 하나의 값만 반환
+- 함수는 하나의 값만 반환
   - 여러개 값 반환하려면 배열이나 객체와 같은 자료구조에 감아 반환
-    ➡️DOM 컬렉션 객체인 HTMLCollection 객체 = 유사배열 객체 && 이터러블(반복 가능한 객체)
+  - ➡️DOM 컬렉션 객체인 `HTMLCollection`` 객체 = 유사배열 객체 && 이터러블(반복 가능한 객체)
 
 ![Alt text](image-13.png)
 
-#### 39-09
+#### 39-09 HTML 문서의 모든 요소 노드 취득 방법
 
 - HTML 문서의 모든 요소 노드 취득 방법: getElementsByTagName 메서드의 인수로 ' \* ' 을 전달
 
@@ -352,8 +358,8 @@ const $all = document.getElementsByTagName("*");
   1. Document.prototype에 정의된 메서드
   2. Element.prototype에 정의된 메서드
 
-1. Document.prototype.getElementsByTagName: DOM 전체에서 요소 노드를 탐색하여 반환.
-2. Element.prototype.getElementsByTagName: 특정 요소 노드 호출, 특정 요소 노드의 자손 노드 중에서 요소 노드를 탐색, 반환
+1. `Document.prototype.getElementsByTagName`: DOM 전체에서 요소 노드를 탐색하여 반환.
+2. `Element.prototype.getElementsByTagName`: 특정 요소 노드 호출, 특정 요소 노드의 자손 노드 중에서 요소 노드를 탐색, 반환
 3.
 
 ```html
@@ -376,7 +382,7 @@ const $all = document.getElementsByTagName("*");
       // #fruits 요소의 자손 노드 중에서 태그 이름이 li인 요소 노드를 모두
       // 탐색하여 반환한다.
       const $fruits = document.getElementById("fruits");
-      const $lisFromFruits = $fruits.getElementsByTagName("li");
+      const $lisFromFruits = ✨$fruits.getElementsByTagName("li");
       console.log($lisFromFruits); // HTMLCollection(3) [li, li, li]
     </script>
   </body>
@@ -389,7 +395,7 @@ const $all = document.getElementsByTagName("*");
 
 - Document.prototype/Element.prototype.**getClassByTagName** 메서드는 인수로 전달한 class 어트리뷰트 값을 갖는 모든 요소 노드들을 탐색, 반환
 - class값 공백 구분해서 여러개 사용가능
-- 여러개의 요소 노드 객체를 갖는 HTMLCollection객체를 반환
+- 여러개의 요소 노드 객체를 갖는 `HTMLCollection`객체를 반환
 
 #### 39-11
 
@@ -425,8 +431,8 @@ const $all = document.getElementsByTagName("*");
 
 #### 39-12
 
-1. Document.prototype.getElementsByClassName: DOM의 루트 노드인 문서 노드(document)를 통해 호출, DOM 전체에서 요소 노드를 탐색, 반환
-2. Element.prototype. getElementsByClassName: 특정요소 노드를 통해 호출, 특정 요소노드의 자손 노드 중에서 요소 노드를 탐색, 반환
+1. `Document.prototype.getElementsByClassName`: DOM 전체에서 요소 노드를 탐색, 반환
+2. `Element.prototype.getElementsByClassName`: 특정요소 노드를 통해 호출, 특정 요소노드의 자손 노드 중에서 요소 노드를 탐색, 반환
 
 ```html
 <!DOCTYPE html>
@@ -511,7 +517,7 @@ p::before {
 
 #### 39-14
 
-- Document.prototype/Element.prototype. getElementsByClassName 메소드 - 인수로 전달한 CSS 선택자를 만족시키는 하나의 요소 노드 반환
+- `Document.prototype/Element.prototype.querySelector` 메소드: 인수로 전달한 CSS 선택자를 만족시키는 하나의 요소 노드 반환
   - CSS 선택자를 만족시키는 요소도느가 여러개: 첫번째 요소 노드만 반환
   - 만족시키는 요소노드가 ✖️: null 반환
   - 전달한 CSS 선택자가 문법에 맞지 않는 경우: DOMException 에러가 발생한다.
@@ -538,10 +544,10 @@ p::before {
 
 <div class="result"></div>
 
-#### 39-15
+#### 39-15 querySelectAll, NodeList
 
-- querySelectAll 메서드 : 여러 개의 요소 노드 객체를 갖는 DOM 컬렉션 객체인 NodeList 객체를 반환.
-- NodeList 객체 : 유사 배열 객체 && 이터러블
+- **querySelectAll 메서드 :** 여러 개의 요소 노드 객체를 갖는 DOM 컬렉션 객체인 NodeList 객체를 반환.
+- **NodeList 객체 :** 유사 배열 객체 && 이터러블
 
 ```html
 <!DOCTYPE html>
@@ -570,7 +576,7 @@ p::before {
 
 #### 39-16
 
-- HTML 문서의 모든 요소 노드를 취득 방법 : querySelectorAll 메서드의 인수를 전체 선택자 '\* '를 전달
+- HTML 문서의 모든 요소 노드를 취득 방법 : querySelectorAll 메서드의 인수를 전체 선택자 ' \* '를 전달
 
 ```javascript
 // 모든 요소 노드를 탐색하여 반환한다.
@@ -578,16 +584,20 @@ const $all = document.querySelectorAll("*");
 // -> NodeList(8) [html, head, body, ul, li#apple, li#banana, li#orange, script]
 ```
 
-querySelector, querySelectorAll 메서드:
+**querySelector, querySelectorAll 메서드**
 (getElementsByTag)
 
-1. Document.prototype: DOM의 루트 노드인 문서 노드(document)를 통해 호출, DOM 전체에서 요소 노드를 탐색, 반환
-2. Element.prototype: 특정요소 노드를 통해 호출, 특정 요소노드의 자손 노드 중에서 요소 노드를 탐색, 반환
+1. `Document.prototype`: DOM 전체에서 요소 노드를 탐색, 반환
+2. `Element.prototype`: 특정요소 노드를 통해 호출, 특정 요소노드의 자손 노드 중에서 요소 노드를 탐색, 반환
 
-- querySelector, querySelectorAll 메서드는 getElementById, getElementsBy\*\*\* 메서드보다 느리다.
-  ➡️ BUT. CSS 선택자 문법을 사용하여 좀 더 구체적인 조건으로 요소 노드를 취득할 수 있다는 장점이 있다.
-- id 어트리뷰트가 있는 요소 노드를 취득하는 경우, getElementById 메서드를 사용!
-- 이 외에는 querySelector, querySelectorAll 사용 권장!
+- querySelector, querySelectorAll 메서드는 getElementById, getElementsBy\*\*\* 메서드보다 느리다⬇️
+  - ➡️ **BUT.** CSS 선택자 문법을 사용하여 좀 더 구체적인 조건으로 요소 노드를 취득할 수 있다는 장점이 있다.
+    <br/>
+
+> **[🤔getElementById,querySelector,querySelectorAll 셋중에 뭐 사용해야해?]**
+>
+> 1.  id 어트리뷰트가 있는 요소 노드를 취득하는 경우, `getElementById` 메서드를 사용!
+> 2.  이 외에는 `querySelector`, `querySelectorAll` 사용 권장!
 
 ## 39.2.5 특정 요소 노드를 취득할 수 있는지 확인
 
@@ -622,21 +632,21 @@ querySelector, querySelectorAll 메서드:
 ## 📌39.2.6 HTMLCollection과 NodeList
 
 - HTMLCollection, NodeList
-  - DOM API가 여러개의 결과값을 반환하기 위한 DOM 컬렉션 객체
+  - DOM API가 여러개의 결과값을 반환하기 위한 **DOM 컬렉션 객체**
   - 유사 배열 객체, 이터러블 ➡️ for..of문으로 순회 가능, 스프레드 문법으로 간단히 배열로 변환 가능
   - ✨노드 객체의 상태 변화를 실시간으로 반영하는 **살아있는 객체**
 
-[차이점]
-
-- HTMLCollection: 언제나 live 객체로 동작
-- NodeList: 상태변화를 실시간으로 반영하지 않고, 과거의 정적 상태를 유지하는 non-live 객체로 동작, 경우에 따라 live로 동작할 때가 있다.
+> [`HTMLCollection`과 `NodeList` 차이점]
+>
+> - `HTMLCollection`: 언제나 live 객체로 동작
+> - `NodeList`: 상태변화를 실시간으로 반영하지 않고, 과거의 정적 상태를 유지하는 non-live 객체로 동작, 경우에 따라 live로 동작할 때가 있다.
 
 ### ✏️HTMLCollection
 
-- HTMLCollection 객체 : 노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 DOM 컬렉션 객체(살아 있는 객체)
+- `HTMLCollection 객체` : 노드 객체의 상태 변화를 실시간으로 반영하는 살아있는 DOM 컬렉션 객체(살아 있는 객체)
 - getElementsByTagName, getElementsByClassName 메서드가 반환
 
-#### 39-18
+#### 39-18 HTMLCollection 객체의 실시간 변경에 대한 주의점
 
 ```html
 <!DOCTYPE html>
@@ -676,22 +686,22 @@ querySelector, querySelectorAll 메서드:
 ```
 
 - class 값이 'red'인 요소 노드를 모두 취득하고 모든 요소의 class값을 'red' -> 'blue'로 변경
-- BUT. 예상대로 동작하지 않는다. 두번째 li요소만 class값이 변경되지 않는다.
+- 🤔BUT. 두번째 li요소만 class값이 변경되지 않는다.
 
 ![Alt text](image-14.png)
 
-🤔예상대로 작동하지 않은 이유
+[🤔예상대로 작동하지 않은 이유]
 
 1. 첫번째 반복
-   - $elems[0]은 첫번째 li요소. class값이 변경됩. 더이상 'red'와 일치하지 않기때문에 $elems에서 실시간 제거. ➡️ HTMLCollection객체는 살아있는 DOM 컬켁션 객체.
+   - `$elems[0]`은 첫번째 `li`요소. class값이 변경됩. 더이상 'red'와 일치하지 않기때문에 `$elems`에서 실시간 제거. (➡️ `HTMLCollection`객체는 살아있는 `DOM` 컬켁션 객체.)
 2. 두번째 반복
-   - $elems[1]은 세번째 li요소. 실시간으로 제외
+   - `$elems[1]`은 세번째 li요소. 실시간으로 제외
 3. 세번째 반복
-   - $elems[2]은 두번째 li요소. $elems에 두번째 li 요소 노드만 남음. 이때 $elems.length는 1이므로 for문 조건식 i < $elems.length가 false로 평가되어 반복이 종료된다. 따라서 $elems에 남아있는 두번째 li요소의 class값은 변경되지 않는다.
+   - `$elems[2]`은 두번째 li요소. `$elems`에 두번째 `li` 요소 노드만 남음. 이때 $elems.length는 1이므로 for문 조건식 i < $elems.length가 false로 평가되어 반복이 종료된다. 따라서 $elems에 남아있는 두번째 li요소의 class값은 변경되지 않는다.
 
-- 이처럼 HTMLCollection 객체는 실시간으로 노드 객체의 상태 변경을 반영하여 요소 삭제 ➡️ for문으로 순회하면서 노드 객체의 상태를 변경할때 주의!!
+- ⚠️이처럼 HTMLCollection 객체는 실시간으로 노드 객체의 상태 변경을 반영하여 요소 삭제 ➡️ for문으로 순회하면서 노드 객체의 상태를 변경할때 주의!!
 
-#### 39-19
+#### 39-19 1. 해결 방법: for문을 역방향
 
 ➡️ 1. 문제 해결 방법: for문을 역방향으로 순회하는 방법
 
@@ -702,7 +712,7 @@ for (let i = $elems.length - 1; i >= 0; i--) {
 }
 ```
 
-#### 39-20
+#### 39-20 2. 해결 방법: while문 사용
 
 ➡️ 2. 문제 해결 방법: while문 사용, 노드객체가 남아 있지 않을 때까지 무한 반복 방법
 
@@ -714,9 +724,11 @@ while ($elems.length > i) {
 }
 ```
 
-#### 39-21
+#### 39-21 3. 해결 방법: 유용한 배열의 고차함수사용.
 
-➡️ 3. ✨문제 해결 방법: 부작용을 발생시키는 HTMLCollection객체를 사용하지 않는 것. 💁‍♀️유용한 배열의 고차함수(forEach, map, filter,reduce 등) 사용.
+➡️ 3. ✨문제 해결 방법: 부작용을 발생시키는 HTMLCollection객체를 사용하지 않는 것.
+
+- 💁‍♀️**유용한 배열의 고차함수(forEach, map, filter,reduce 등) 사용.**
 
 ```javascript
 // 유사 배열 객체이면서 이터러블인 HTMLCollection을 배열로 변환하여 순회
@@ -725,9 +737,10 @@ while ($elems.length > i) {
 
 ### ✏️NodeList
 
-- HTMLCollection 객체의 부작용을 해결하기 위해 querySelectorAll 메서드를 사용하는 방법이 있음. 이 메서드는 DOM 컬렉션 객체인 NodeList 객체를 반환한다.
+- `HTMLCollection` 객체의 부작용을 해결하기 위해 `querySelectorAll` 메서드를 사용하는 방법이 있음.
+- `querySelectorAll` 메서드는 DOM 컬렉션 객체인 NodeList 객체를 반환한다.
 
-- NodeList 객체: 노드 객체의 상태 변경을 반영하지 않는 객체
+- **NodeList 객체**: 노드 객체의 상태 변경을 반영하지 않는 객체
 
 #### 39-22
 
@@ -741,11 +754,11 @@ $elems.forEach((elem) => (elem.className = "blue"));
 
 #### 39-23
 
-- NodeList객체
-  - NodeList.prototype.forEach 메서드를 상속받아 사용가능. ( = Array.prototype.forEacg 메서드와 사용방법이 동일)
-  - NodeList.prototype은 item, entries, keys,values 메서드를 제공
-  - 대부분 경우 노드 객체의 상태 변경을 실시간으로 반영하지 않고, 과거의 정적 상태를 유지하는 non-live 객체로 동작
-  - **BUT. childNodes 프로퍼티가 반환하는 NodeList 객체는 HTMLCollection 객체와 같이 실시간으로 노드 객체의 상태 변경을 반영하는 live 객체로 동작하므로 주의가 필요하다.**
+- **NodeList 객체**
+  - `NodeList.prototype.forEach` 메서드를 상속받아 사용가능.
+  - `NodeList.prototype`은 `item, entries, keys, values` 메서드를 제공.
+  - 대부분 경우 노드 객체의 상태 변경을 실시간으로 반영하지 않고, 과거의 정적 상태를 유지하는 non-live 객체로 동작.
+    > - BUT. ⚠️`childNodes` 프로퍼티가 반환하는 `NodeList` 객체는 `HTMLCollection` 객체와 같이 실시간으로 노드 객체의 상태 변경을 반영하는 live 객체로 동작하므로 주의가 필요하다.
 
 ```html
 <!DOCTYPE html>
@@ -780,10 +793,10 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-#### 39-24 HTMLCollection이나 NodeList 객체 안전하게 사용방법(배열로 변환)
+#### 39-24 HTMLCollection이나 NodeList 객체 안전하게 사용방법 = 배열로 변환
 
-- 이처럼 HTMLCollection이나 NodeList 객체는 예상과 다르게 동작할 때가 있어 다루기 까다롭고 실수하기 쉽다.
-- ➡️ 노드 객체의 상태 변경과 상관없이 안전하게 DOM 컬렉션을 사용하려면 => **HTMLCollection이나 NodeList객체를 배열로 변환하여 사용**
+- 이처럼 `HTMLCollection`이나 `NodeList 객체`는 ⚠️예상과 다르게 동작할 때가 있어 다루기 까다롭고 실수하기 쉽다.
+- ➡️ 노드 객체의 상태 변경과 상관없이 안전하게 DOM 컬렉션을 사용하려면 => ✨**HTMLCollection이나 NodeList객체를 배열로 변환하여 사용**
 - 배열로 변환하면 유용한 고차 함수(forEach, map, filter, reduce 등)를 사용할 수 있다.
 - HTMLCollection과 NodeList 객체는 모두 유사 배열 객체이면서 이터러블 ➡️ 스프레드 문법 or Array.from 메서드를 사용하여 간단히 배열로 변환
 
@@ -812,6 +825,8 @@ $elems.forEach((elem) => (elem.className = "blue"));
   </script>
 </html>
 ```
+
+---
 
 # 39-25
 
