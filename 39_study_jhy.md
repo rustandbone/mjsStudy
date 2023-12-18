@@ -11,17 +11,20 @@
       - [4️⃣텍스트노드](#4️⃣텍스트노드)
     - [✏️39.1.3 노드 객체의 상속 구조](#️3913-노드-객체의-상속-구조)
       - [39-02](#39-02)
+  - [📌 39.2 요소 노드 취득](#-392-요소-노드-취득)
     - [✏️39.2.1 id를 이용한 요소노드 취득](#️3921-id를-이용한-요소노드-취득)
-      - [39-03 getElemetById](#39-03-getelemetbyid)
+      - [39-03 getElementById](#39-03-getelementbyid)
       - [39-04 id 값](#39-04-id-값)
-      - [39-05 id값을 갖은 HTML 요소가 없을 경우](#39-05-id값을-갖은-html-요소가-없을-경우)
+      - [39-05 id값을 갖는 HTML 요소가 없을 경우](#39-05-id값을-갖는-html-요소가-없을-경우)
       - [39-06 id값과 동일한 이름의 전역 변수](#39-06-id값과-동일한-이름의-전역-변수)
       - [39-07](#39-07)
-      - [39-08 getElementsByTagName](#39-08-getelementsbytagname)
-      - [39-09 HTML 문서의 모든 요소 노드 취득 방법](#39-09-html-문서의-모든-요소-노드-취득-방법)
-      - [39-10](#39-10)
-      - [39-11](#39-11)
-      - [39-12](#39-12)
+  - [📌39.2.2 태그 이름을 이용한 요소 노드 취득](#3922-태그-이름을-이용한-요소-노드-취득)
+    - [39-08 getElementsByTagName](#39-08-getelementsbytagname)
+    - [39-09 HTML 문서의 모든 요소 노드 취득 방법](#39-09-html-문서의-모든-요소-노드-취득-방법)
+    - [39-10](#39-10)
+  - [📌 39.2.3 class를 이용한 요소노드 취득](#-3923-class를-이용한-요소노드-취득)
+    - [39-11](#39-11)
+    - [39-12](#39-12)
   - [📌39.2.4 CSS 선택자를 이용한 요소 노드 취득](#3924-css-선택자를-이용한-요소-노드-취득)
     - [39-13](#39-13)
     - [39-14](#39-14)
@@ -141,7 +144,8 @@
 -> 부모노드와 자식노드로 구성, 노드간의 계층적 구조(비선형 자료구조)
 
 - 하나의 최상위 노드(루트노드)에서 시작, 최상위 노드는 부모노드가 없음
-- 루트노드 0개 이상의 자식 노드 가짐. \*리프노드 : 자식노드가 없는 노드
+- 루트노드 0개 이상의 자식 노드 가짐.
+- \*리프노드 : 자식노드가 없는 노드
   ![Alt text](image-8.png)
 
 ➡️노드 객체들로 구성된 트리 자료구조 = **DOM**
@@ -259,6 +263,9 @@ HTML 문서를 파싱🔁 노드 객체
 ```
 
 ![Alt text](image-12.png)
+
+<br/>
+
 ➡️ 노드 객체의 상속구조는 개발자 도구 Elements 패널 우측의 Properties패널에서 확인할 수 있음.
 
 - 모든 노드객체는 공통으로 갖는 기능이 있음
@@ -292,15 +299,15 @@ HTML 문서를 파싱🔁 노드 객체
 
   > 💁‍♀️HTML과 DOM 연관지어 바라보기
 
-##📌 39.2 요소 노드 취득
+## 📌 39.2 요소 노드 취득
 
 요소노드 취득: HTML 요소를 조작하는 시작점
 
 ### ✏️39.2.1 id를 이용한 요소노드 취득
 
-#### 39-03 getElemetById
+#### 39-03 getElementById
 
-Document.prototype.getElemetById 메서드 : 인수로 전달한 id 어트리뷰트 값을 갖는 요소 노드를 탐색하여 반환.
+Document.prototype.getElementById 메서드 : 인수로 전달한 id 어트리뷰트 값을 갖는 요소 노드를 탐색하여 반환.
 
 - 문서노드인 document를 통해 호출
 
@@ -354,9 +361,9 @@ Document.prototype.getElemetById 메서드 : 인수로 전달한 id 어트리뷰
 </html>
 ```
 
-#### 39-05 id값을 갖은 HTML 요소가 없을 경우
+#### 39-05 id값을 갖는 HTML 요소가 없을 경우
 
-- id값을 갖은 HTML 요소가 없을 경우 -> null 반환
+- id값을 갖는 HTML 요소가 없을 경우 -> null 반환
 
 ```html
 <!DOCTYPE html>
@@ -420,7 +427,7 @@ Document.prototype.getElemetById 메서드 : 인수로 전달한 id 어트리뷰
 </html>
 ```
 
-##📌39.2.2 태그 이름을 이용한 요소 노드 취득
+## 📌39.2.2 태그 이름을 이용한 요소 노드 취득
 
 #### 39-08 getElementsByTagName
 
@@ -455,7 +462,7 @@ Document.prototype.getElemetById 메서드 : 인수로 전달한 id 어트리뷰
 
 - 함수는 하나의 값만 반환
   - 여러개 값 반환하려면 배열이나 객체와 같은 자료구조에 감아 반환
-  - ➡️DOM 컬렉션 객체인 `HTMLCollection`` 객체 = 유사배열 객체 && 이터러블(반복 가능한 객체)
+  - ➡️DOM 컬렉션 객체인 `HTMLCollection` 객체 = 유사배열 객체 && 이터러블(반복 가능한 객체)
 
 ![Alt text](image-13.png)
 
@@ -477,7 +484,6 @@ const $all = document.getElementsByTagName("*");
 
 1. `Document.prototype.getElementsByTagName`: DOM 전체에서 요소 노드를 탐색하여 반환.
 2. `Element.prototype.getElementsByTagName`: 특정 요소 노드 호출, 특정 요소 노드의 자손 노드 중에서 요소 노드를 탐색, 반환
-3.
 
 ```html
 <!DOCTYPE html>
@@ -506,9 +512,9 @@ const $all = document.getElementsByTagName("*");
 </html>
 ```
 
-- 인수로 전달된 태그 이름을 갖는 요소가 없으면, getElementsByTagName 메서드는 -> 빈 HTMLCollection객체 반환.
+- 인수로 전달된 태그 이름을 갖는 요소가 없으면, getElementsByTagName 메서드는 ➡️ 빈 HTMLCollection객체 반환.
 
-##📌 39.2.3 class를 이용한 요소노드 취득
+## 📌 39.2.3 class를 이용한 요소노드 취득
 
 - Document.prototype/Element.prototype.**getClassByTagName** 메서드는 인수로 전달한 class 어트리뷰트 값을 갖는 모든 요소 노드들을 탐색, 반환
 - class값 공백 구분해서 여러개 사용가능
@@ -810,7 +816,7 @@ const $all = document.querySelectorAll("*");
 [🤔예상대로 작동하지 않은 이유]
 
 1. 첫번째 반복
-   - `$elems[0]`은 첫번째 `li`요소. class값이 변경됩. 더이상 'red'와 일치하지 않기때문에 `$elems`에서 실시간 제거. (➡️ `HTMLCollection`객체는 살아있는 `DOM` 컬켁션 객체.)
+   - `$elems[0]`은 첫번째 `li`요소. class값이 변경됨. 더이상 'red'와 일치하지 않기때문에 `$elems`에서 실시간 제거. (➡️ `HTMLCollection`객체는 살아있는 `DOM` 컬켁션 객체.)
 2. 두번째 반복
    - `$elems[1]`은 세번째 li요소. 실시간으로 제외
 3. 세번째 반복
