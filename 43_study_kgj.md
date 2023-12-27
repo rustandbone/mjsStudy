@@ -15,7 +15,7 @@
   2. 변경할 필요가 없는 부분까지 처음부터 다시 렌더링, 이로인한 화면 전환으로 화면이 순간적으로 깜빡이는 현상 발생
   3. 클라이언트와 서버와의 통신이 동기 방식으로 동작하기 때문에 서버로부터 응답이 있을때까지 다음 처리는 블로킹
 
-> 💡 Ajax의 등장! => 전통적인 패러다임을 획기적으로 전환 \*
+> 💡 Ajax의 등장! => 전통적인 패러다임을 획기적으로 전환 
 
 ![](https://velog.velcdn.com/cloudflare/hang_kem_0531/59abeb55-f41c-4f8b-a6cc-28a415c2204b/image.png)
 
@@ -199,7 +199,7 @@ const xhr = new XMLHttpRequest();
 
 ### 43.3.2 XMLHttpRequest 객체의 프로퍼티와 메서드
 
-- `XMLHttpRequest` 객체는 다양한 프로퍼티와 메서드를 제공 \*
+- `XMLHttpRequest` 객체는 다양한 프로퍼티와 메서드를 제공
 
 #### XMLHttpRequest 객체의 프로토타입 프로퍼티
 
@@ -217,7 +217,7 @@ const xhr = new XMLHttpRequest();
 
 ![Alt text](image-3.png)
 
-### 43.3.3 HTTP 요청 전송 \*
+### 43.3.3 HTTP 요청 전송
 
 1. `XMLHttpRequest.prototype.open` 메서드로 HTTP 요청을 초기화
 2. 필요에 따라 `XMLHttpRequest.prototype.setRequestHeader` 메서드로 특정 HTTP 요청의 헤더 값을 설정
@@ -251,7 +251,7 @@ xhr.send();
 
 #### XMLHttpRequest.prototype.send
 
-- send 메서드는 open 메서드로 초기화된 HTTP 요청을 서버에 전송 \*
+- send 메서드는 open 메서드로 초기화된 HTTP 요청을 서버에 전송
   > GET 요청 메서드의 경우 데이터를 URL의 일부분인 쿼리 문자열로 서버에 전송
   > POST 요청 메서드의 경우 <u>데이터(페이로드)를 요청 몸체(request body)</u>에 담아 전송
 - send 메서드에는 요청 몸체에 담아 전송할 데이터(페이로드)를 인수로 전달할 수 있음
@@ -291,7 +291,7 @@ xhr.send(JSON.stringify({ id: 1, content: 'HTML', completed: false }));
 
 - Accept
   - HTTP 클라이언트가 서버에 요청할 때 서버가 응답할 데이터의 MIME타입을 지정할 수 있음
-  - Accept 헤더를 설저앟지 않으면 `send` 메서드가 호출될 때 `*/*`로 전송
+  - Accept 헤더를 설정하지 않으면 `send` 메서드가 호출될 때 `*/*`로 전송
 
 ```javascript
 // 서버가 응답할 데이터의 MIME 타입 지정: json
