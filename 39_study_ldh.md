@@ -488,7 +488,7 @@ DocumentFragment 노드를 DOM에 추가하면 자신은 제거되고 자신의 
 
 ### 39-61
 
-Document.prototype.createDocumentFragment 메서드는 비어 있는 DocumentFragment 노드를 생성하여 반환
+`Document.prototype.createDocumentFragment` 메서드는 비어 있는 DocumentFragment 노드를 생성하여 반환
 
 ```html
 <!DOCTYPE html>
@@ -533,7 +533,7 @@ Document.prototype.createDocumentFragment 메서드는 비어 있는 DocumentFra
 
 ### 마지막 노드로 추가
 
-Node.prototype.appendChild 메서드는 인수로 전달받은 노드를 자신을 호출한 노드의 마지막 자식 노드로 DOM에 추가.  
+`Node.prototype.appendChild` 메서드는 인수로 전달받은 노드를 자신을 호출한 노드의 마지막 자식 노드로 DOM에 추가.  
 노드를 추가할 위치 지정할 수 없음. 언제나 마지막 자식 노드로 추가.
 
 ### 39-62
@@ -562,7 +562,7 @@ Node.prototype.appendChild 메서드는 인수로 전달받은 노드를 자신�
 
 ### 지정한 위치에 노드 삽입
 
-Node.prototype.insertBefore(newNode, childNode) 메서드는 첫 번째 인수로 전달받은 노드를 두 번쨰 인수로 전달받은 노드 앞에 삽입.
+`Node.prototype.insertBefore(newNode, childNode)` 메서드는 첫 번째 인수로 전달받은 노드를 두 번째 인수로 전달받은 노드 앞에 삽입.
 
 ### 39-63
 
@@ -683,7 +683,7 @@ DOM에 이미 존재하는 노드를 appendChild 또는 insertBefore 메서드�
 
 ## 39.6.7 노드 복사
 
-Node.prototype.cloneNode([deep: true | false]) 메서드는 노드의 사본을 생성해 반환.
+`Node.prototype.cloneNode([deep: true | false])` 메서드는 노드의 사본을 생성해 반환.
 
 매개변수 deep에 true를 인수로 전달하면 노드를 깊은 복사(deep clone)하여 모든 자손 노드가 포함된 사본을 생성  
 false를 인수로 전달하거나 생략하면 얕은 복사(shallow copy)하여 노드 자신만의 사본 생성. 얕은 복사로 생성된 요소 노드는 자손 노드를 복사하지 않으므로 텍스트 노드도 없음
@@ -719,7 +719,7 @@ false를 인수로 전달하거나 생략하면 얕은 복사(shallow copy)하�
 
 ## 39.6.8 노드 교체
 
-Node.prototype.replaceChild(newChild, oldChild) 메서드는 자신을 호출한 노드의 자식 노드를 다른 노드로 교체함
+`Node.prototype.replaceChild(newChild, oldChild)` 메서드는 자신을 호출한 노드의 자식 노드를 다른 노드로 교체함
 
 첫 번째 매개변수 newChild에는 교체할 새로운 노드를 인수로 전달,  
 두 번째 매개변수 oldChild에는 이미 존재하는 교체될 노드를 인수로 전달
@@ -754,7 +754,7 @@ oldChild 매개변수에 인수로 전달한 노드는, replaceChild 메서드�
 
 ## 39.6.9 노드 삭제
 
-Node.prototype.removeChild(child) 메서드는 child 매개변수에 인수로 전달한 노드를 DOM에서 삭제.
+`Node.prototype.removeChild(child)` 메서드는 child 매개변수에 인수로 전달한 노드를 DOM에서 삭제.
 
 인수로 전달한 노드는 removeChild 메서드를 호출한 노드의 자식 노드이어야 함.
 
