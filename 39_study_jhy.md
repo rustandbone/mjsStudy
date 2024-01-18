@@ -42,22 +42,25 @@
       - [39-22](#39-22)
       - [39-23](#39-23)
       - [39-24 HTMLCollection이나 NodeList 객체 안전하게 사용방법 = 배열로 변환](#39-24-htmlcollection이나-nodelist-객체-안전하게-사용방법--배열로-변환)
-- [39-25](#39-25)
-- [39-26](#39-26)
-- [39-27](#39-27)
-- [39-28](#39-28)
-- [39-29](#39-29)
-- [39-30](#39-30)
-- [39-31](#39-31)
-- [39-32](#39-32)
-- [39-33](#39-33)
-- [39-34](#39-34)
-- [39-35](#39-35)
-- [39-36](#39-36)
-- [39-37](#39-37)
-- [39-38](#39-38)
-- [39-39](#39-39)
-- [39-40](#39-40)
+  - [📌39.3 노드 탐색](#393-노드-탐색)
+    - [39-25 예시](#39-25-예시)
+  - [✏️39.3.1 공백 텍스트 노드](#️3931-공백-텍스트-노드) - [39-26 공백 텍스트 노드](#39-26-공백-텍스트-노드) - [39-27 인위적으로 공백문자 제거](#39-27-인위적으로-공백문자-제거)
+    - [✏️ 자식 노드 탐색](#️-자식-노드-탐색)
+      - [39-28 자식 노드 탐색 예시](#39-28-자식-노드-탐색-예시)
+  - [✏️39.3.3 자식 노드 존재 확인](#️3933-자식-노드-존재-확인) - [39-29 Node.prototype.hasChildNodes 메서드 예제](#39-29-nodeprototypehaschildnodes-메서드-예제) - [39-30 children.length, childElementCount 예제](#39-30-childrenlength-childelementcount-예제)
+  - [39.3.4 ✏️요소 노드의 텍스트 노드 탐색](#3934-️요소-노드의-텍스트-노드-탐색) - [39-31 요소 노드의 텍스트 노드 탐색](#39-31-요소-노드의-텍스트-노드-탐색)
+  - [39.3.5 ✏️부모 노드 탐색](#3935-️부모-노드-탐색) - [39-32 Node.prototype.parentNode](#39-32-nodeprototypeparentnode)
+  - [39.3.6 ✏️형제 노드 탐색](#3936-️형제-노드-탐색) - [39-33 형제 노드 탐색](#39-33-형제-노드-탐색)
+  - [✏️39.4 노드 정보 취득](#️394-노드-정보-취득) - [39-34 노드 정보 취득](#39-34-노드-정보-취득)
+  - [✏️39.5 요소 노드의 텍스트 조작](#️395-요소-노드의-텍스트-조작)
+    - [📌39.5.1 nodeValue](#3951-nodevalue)
+      - [39-35 nodeValue](#39-35-nodevalue)
+      - [39-36 텍스트 노드의 nodeValue 프로퍼티에 값 텍스트 변경](#39-36-텍스트-노드의-nodevalue-프로퍼티에-값-텍스트-변경)
+    - [39.5.2 textContent](#3952-textcontent)
+      - [39-37 Node.prototype.textContent](#39-37-nodeprototypetextcontent)
+      - [39-38 `nodeValue 프로퍼티`의 복잡함](#39-38-nodevalue-프로퍼티의-복잡함)
+      - [39-39 요소 노드의 콘텐츠 영역에 자식 요소 노드가 없고 텍스트만 존재](#39-39-요소-노드의-콘텐츠-영역에-자식-요소-노드가-없고-텍스트만-존재)
+      - [39-40 textContent 프로퍼티에 문자열 할당](#39-40-textcontent-프로퍼티에-문자열-할당)
 - [39-41](#39-41)
 - [39-42](#39-42)
 - [39-43](#39-43)
@@ -951,7 +954,11 @@ $elems.forEach((elem) => (elem.className = "blue"));
 
 ---
 
-# 39-25
+## 📌39.3 노드 탐색
+
+요소 노드를 취득 후, 취득한 요소 노드를 기점으로 DOM트리의 노드를 옮겨 다니며 부모, 형제, 자식 노드 등을 탐색해야할 때가 있다.
+
+#### 39-25 예시
 
 ```html
 <ul id="fruits">
@@ -961,7 +968,36 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </ul>
 ```
 
-# 39-26
+> `<ul id="fruits">`요소는 3개 자식 요소를 가진다.
+
+1. `ul#fruit` 요소 노드 취득
+2. 자식 노드를 모두 탐색하거나 자식 노드 중 하나만 탐색
+3. `li.banana` 요소는 2개 형제요소와 부모 요소를 갖는다.
+4. `li.banana` 요소 노드를 취득, 형제 노드를 탐색하거나 부모 노드를 탐색할 수 있다.
+
+🎄DOM트리 상의 노드를 탐색 할 수 있도록 Node, Element 인터페이스는 **트리 탐색 프로퍼티**를 제공
+![Alt text](image-15.png)
+
+- parentNode. previousSibling, firstChild, childNodes 프로퍼티: **Node prototype**이 제공.
+- 프로퍼티 키에 Element가 포함된 previousElementSibling, nextElementSibling과 children 프로퍼티: **Element.prototype**이 제공.
+
+<br/>
+
+**노드 탐색 프로퍼티 === 모두 접근자 프로퍼티**
+
+- `setter`없이 `getter`만 존재하여 참조만 기능한 읽기 전용 접근자 프로퍼티.
+- 값을 할당하면 아무런 에러 없이 무시됨.
+
+> 🤔접근자 프로퍼티란?
+> 접근자 프로퍼티의 본질은 함수인데, 이 함수는 값을 획득(get)하고 설정(set)하는 역할을 담당
+
+![Alt text](image-16.png)
+
+## ✏️39.3.1 공백 텍스트 노드
+
+**공백 텍스트 노드:** HTML 요소 사이의 스페이스, 탭, 줄바꿈(개행) 등의 공백 문자는 텍스트 노드를 생성
+
+##### 39-26 공백 텍스트 노드
 
 ```html
 <!DOCTYPE html>
@@ -976,17 +1012,35 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-27
+스페이스, 탭, 줄바꿈(개행), 공백 문자가 추가. HTML 문서 파싱되어 다음과 같은 DOM 생성
+![Alt text](image-17.png)
 
-```html
-<ul id="fruits">
-  <li class="apple">Apple</li>
-  <li class="banana">Banana</li>
-  <li class="orange">Orange</li>
-</ul>
+공백 텍스트 노드를 생성.
+⚠️따라서 노드를 탐색 할때는 공백 문자가 생성한 공백 텍스트 노드를 주의
+
+##### 39-27 인위적으로 공백문자 제거
+
+```
+<ul id="fruits"><li
+  class="apple">Apple</li><li
+  class="banana">Banana</li><li
+  class="orange">Orange</li></ul>
 ```
 
-# 39-28
+- 가독성이 좋지 않아 권장❌
+
+### ✏️ 자식 노드 탐색
+
+자식 노드를 탐색하기위해 사용하는 노드 탐색 프로퍼티
+|프로퍼티|설명|
+|------|---|
+|Node-prototype.childNodes| - 자식 노드를 모두 탐색하여 DOM 컬랙션 객체인 `NodeList`에 담아 반환. <br/> - **`childNodes` 프로퍼티가 반환한 `NodeList`에는 요소노드뿐만 아니라 텍스트 노드도 포함⭕되어 있을 수 있다.** |
+|Element.prototype.children| - 자식 노드 중에서 요소 노드만 모두 탐색하여 DOM 컬렉션 객체인 `HTMLCollection`에 담아 반환한다. <br/> - **children 프로퍼티가 반환한 `HTMLCollection`에는 텍스트 노드가 포함❌되지 않는다.**
+
+(참고)
+![Alt text](image-18.png)
+
+##### 39-28 자식 노드 탐색 예시
 
 ```html
 <!DOCTYPE html>
@@ -1031,7 +1085,16 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-29
+## ✏️39.3.3 자식 노드 존재 확인
+
+**Node.prototype.hasChildNodes 메서드:** 자식 노드 존재 확인
+
+- 자식 노드 존재 유: true
+- 자식 노드 존재 무: false
+
+텍스트 노드를 포함하여 자식 노드의 존재를 확인
+
+##### 39-29 Node.prototype.hasChildNodes 메서드 예제
 
 ```html
 <!DOCTYPE html>
@@ -1050,7 +1113,9 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-30
+💁‍♂️ 자식 노드 중에 텍스트 노드가 아닌 요소 노드가 존재하는지 확인하려면 `children.length` 또는 Element 인터페이스의`childElementCount`프로퍼티 사용
+
+##### 39-30 children.length, childElementCount 예제
 
 ```html
 <!DOCTYPE html>
@@ -1073,7 +1138,13 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-31
+## 39.3.4 ✏️요소 노드의 텍스트 노드 탐색
+
+- 요소 노드의 텍스트 노드 === 요소 노드의 자식노드
+- 따라서 요소 노드의 텍스트 노드는 **firstChild 프로퍼티로 접근 가능**
+- 첫번째 자식 노드를 반환(텍스트 노드 or 요소 노드)
+
+##### 39-31 요소 노드의 텍스트 노드 탐색
 
 ```html
 <!DOCTYPE html>
@@ -1088,7 +1159,13 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-32
+## 39.3.5 ✏️부모 노드 탐색
+
+`Node.prototype.parentNode` 프로퍼티 : 부모 노드 탐색
+
+- ⚠️텍스트 노드는 DOM트리의 최종단 노드인 리프노드임으로 **부모노드가 텍스트 노드인 경우는 없다**❌.
+
+##### 39-32 Node.prototype.parentNode
 
 ```html
 <!DOCTYPE html>
@@ -1110,7 +1187,19 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-33
+## 39.3.6 ✏️형제 노드 탐색
+
+| 프로퍼티                                 | 설명                                                                                                  |
+| ---------------------------------------- | ----------------------------------------------------------------------------------------------------- |
+| Node.prototype.previouseSibling          | 부모가 같은 형제 노드 중에서 자신의 **이전 형제 노드를 탐색**하여 반환. (✨요소 노드, 텍스트노드)     |
+| Node.prototype.nextSibling               | 부모 노드가 같은 형제 노드중에서 자신의 **다음 형제 노드**를 탐색하여 반환. (✨요소 노드, 텍스트노드) |
+| Element.prototype.previousElementSibling | 부모 노드가 같은 형제 노드중에서 자신의 **이전 형제 요소**를 탐색하여 반환. (✨요소 노드)             |
+| Element.prototype.nextElementSibling     | 부모 노드가 같은 형제 노드중에서 자신의 **다음 형제 요소**를 탐색하여 반환. (✨요소 노드)             |
+
+⚠️어트리뷰트 노드는 요소 노드와 연결되어 있지만 부모 노드가 같은 형제 노드가 아니기 때문에 반환되지 않는다.
+<br/> ➡️ **텍스트 노드** 또는 **요소 노드**만 반환
+
+##### 39-33 형제 노드 탐색
 
 ```html
 <!DOCTYPE html>
@@ -1159,7 +1248,14 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-34
+## ✏️39.4 노드 정보 취득
+
+| 프로퍼티                | 설명                                                                                                                                                                                                                                                                                         |
+| ----------------------- | -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Node.prototype.nodeType | 노드 객체의 종류(노드 타입을 나타내는 상수를 반환. 노드 타입 상수는 Node에 정의) <br/> - Node.ELEMENT_NODE : 요소 노드 타입을 나타내는 상수 1을 반환 <br/> - Node.TEXT_NODE : 텍스트 노드 타입을 나타내는 상수 3을 반환 <br/> - Node.DOCUMENT_NODE : 문서 노드 타입을 나타내는 상수 9을 반환 |
+| Node.prototype.nodeName | 노드 이름을 문자열로 반환 <br/> - 요소 노드: 대문자 문자열로 태그 이름("UL", "LI" 등) 반환 <br/> - 텍스트 노드: 문자열 '#text'를 반환 <br/> - 문서 노드: 문자열 '#document'를 반환                                                                                                           |
+
+##### 39-34 노드 정보 취득
 
 ```html
 <!DOCTYPE html>
@@ -1185,7 +1281,18 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-35
+## ✏️39.5 요소 노드의 텍스트 조작
+
+위에 살펴본 노드 탐색, 노드 정보 프로퍼티는 모두 읽기 전용 접근자 프로퍼티다
+
+### 📌39.5.1 nodeValue
+
+<br/>💁‍♂️ 지금부터 살펴볼 `Node.prototype.nodeValue` 프로퍼티는 `setter`와 `getter` 모두 존재하는 **접근자 프로퍼티**. ➡️ nodeValue 프로퍼티는 참조, 할당 모두 가능
+
+- 노드 객체의 `nodeValue 프로퍼티`를 참조하면 **노드 객체의 값(텍스트 노드의 텍스트)** 을 반환.
+  ➡️ ⚠️따라서 텍스트 노드가 아닌 문서노드나 요소 노드의 nodeValue 프로퍼티를 참조하면 `null` 반환
+
+##### 39-35 nodeValue
 
 ```html
 <!DOCTYPE html>
@@ -1208,7 +1315,17 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-36
+| 노드 참조                                                  | 반환값                   |
+| ---------------------------------------------------------- | ------------------------ |
+| **텍스트 노드**의 nodeValue 프로퍼티를 참조                | 텍스트 노드의 값(텍스트) |
+| **텍스트 노드 아닌 노드 객체**의 nodeValue 프로퍼티를 참조 | `null`                   |
+
+- 텍스트 노드의 nodeValue 프로퍼티에 값을 할당하면 텍스트를 변경할 수 있다.
+  [텍스트 변경 순서]
+  1. 텍스트를 변경할 요소 노드 취득, 취득한 요소 노드 탐색, fistChild 프로퍼티를 사용해 텍스트 노드 탐색
+  2. 탐색한 텍스트 노드의 nodeValue 프로퍼티를 사용하여 텍스트 노드 값 변경
+
+##### 39-36 텍스트 노드의 nodeValue 프로퍼티에 값 텍스트 변경
 
 ```html
 <!DOCTYPE html>
@@ -1228,9 +1345,11 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-<div class="result"></div>
+### 39.5.2 textContent
 
-# 39-37
+`Node.prototype.textContent` 프로퍼티는 `setter`와 `getter` 모두 존재하는 접근자 프로퍼티로서 **요소 노드의 텍스트와 모든 자손 노드의 텍스트를 모두 취득**
+
+##### 39-37 Node.prototype.textContent
 
 ```html
 <!DOCTYPE html>
@@ -1239,13 +1358,17 @@ $elems.forEach((elem) => (elem.className = "blue"));
     <div id="foo">Hello <span>world!</span></div>
   </body>
   <script>
-    // #foo 요소 노드의 텍스트를 모두 취득한다. 이때 HTML 마크업은 무시된다.
+    // ✨#foo 요소 노드의 텍스트를 모두 취득한다. 이때 HTML 마크업은 무시된다.
     console.log(document.getElementById("foo").textContent); // Hello world!
   </script>
 </html>
 ```
 
-# 39-38
+![Alt text](image-19.png)
+
+- `nodeValue 프로퍼티`를 사용하는 것 보다 👑`textContent 프로퍼티` 사용 권장
+
+##### 39-38 `nodeValue 프로퍼티`의 복잡함
 
 ```html
 <!DOCTYPE html>
@@ -1264,7 +1387,12 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-39
+![Alt text](image-20.png)
+
+##### 39-39 요소 노드의 콘텐츠 영역에 자식 요소 노드가 없고 텍스트만 존재
+
+만약 요소 노드의 콘텐츠 영역에 자식 요소 노드가 없고 텍스트만 존재한다면 `firstChild.nodeValue`와 textContent 프로퍼티는 같은 결과를 반환.
+이 경우 textContent 프로퍼티를 사용하는 편이 간단.
 
 ```html
 <!DOCTYPE html>
@@ -1283,7 +1411,9 @@ $elems.forEach((elem) => (elem.className = "blue"));
 </html>
 ```
 
-# 39-40
+##### 39-40 textContent 프로퍼티에 문자열 할당
+
+요소 노드의 `textContent` 프로퍼티에 문자열을 할당하면 **요소 노드의 모든 자식 노드가 제거되고 할당한 문자열이 텍스트로 추가**. (HTML 마크업이 포함되어 있어도 문자열로 텍스트로 취급)
 
 ```html
 <!DOCTYPE html>
@@ -1298,6 +1428,13 @@ $elems.forEach((elem) => (elem.className = "blue"));
   </script>
 </html>
 ```
+
+![Alt text](image-21.png)
+
+> ⚠️ `textContent 프로퍼티`와 유사한 동작을 하는 `innerText 프로퍼티`가 있지만 사용하지 않는❌ 것이 좋다.
+>
+> - innerText 프로퍼티는 CSS에 순종적이라 CSS에 의해 비표시(visibility: hidden;)로 지정된 요소 노드의 텍스트를 반환하지 않는다.
+> - innerText 프로퍼티는 CSS를 고려해야 하므로 textContent 프로퍼티 보다 느리다⬇️
 
 # 39-41
 
